@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        {% block head_block %}
+        {% endblock %}
+    </head>
+    <body>
+        <nav class="navbar">
+            <div id="brand"><a class="links" href="">BRAND</a></div>
+            <div class="nav-div" id="home"><a class="links" href="">Home</a></div>
+            <div class="nav-div" id="leaderboard"><a class="links" href="">Leaderboard</a></div>
+            <div class="nav-div" id="chats"><a class="links" href="">Chats</a></div>
+            <div class="nav-div" id="profile"><a class="links" href="">Profile</a></div>
+        </nav>
+        <div class="main-content">
+            <div class="buffer"></div>
+            <div class="middle-content">
+            {% block body_block %}
+            {% endblock %}
+            </div>
+            <div class="buffer"></div>
+        </div>
+    </body>
+</html>

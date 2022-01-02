@@ -1,0 +1,70 @@
+:root {
+    --navbar-bg-color: #7900FF;
+    --navbar-height: 64px;
+}
+
+@font-face {
+    font-family: 'Comic Neue Regular';
+    src: url("fonts/ComicNeue/ComicNeue-Regular.ttf");
+    font-family: 'Comic Neue Bold';
+    src: url("fonts/ComicNeue/ComicNeue-Bold.ttf");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: var(--navbar-bg-color);
+    height: var(--navbar-height);
+    width:100vw;
+    position: fixed;
+    padding: 0 1.4rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.links {
+    text-decoration: none;
+    font-family: 'Comic Neue Bold';
+    color: white;
+    font-size: 1.5rem;
+}
+
+#brand {
+    flex: 2;
+}
+
+.nav-div {
+    /* border-left: 3px solid black;  */
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-div:hover {
+    border-radius: 10px;
+    background-color: #548CFF;
+}
+
+.main-content {
+    /* background-color: red; */
+    display:flex;
+    /* flex-direction: column; */
+    height: 100vh;
+}
+
+.buffer {
+    /* background-color: #93FFD8; */
+    background-image: url("images/background.svg");
+    flex: 1;
+}
+
+.middle-content {
+    background-color: white;
+    flex: 4;
+}
