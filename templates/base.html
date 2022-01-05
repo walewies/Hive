@@ -14,8 +14,12 @@
             <div id="brand"><a class="links" href="">BRAND</a></div>
             <div class="nav-div" id="home"><a class="links" href="">Home</a></div>
             <div class="nav-div" id="leaderboard"><a class="links" href="">Leaderboard</a></div>
+            {% if user.is_authenticated %}
             <div class="nav-div" id="chats"><a class="links" href="">Chats</a></div>
             <div class="nav-div" id="profile"><a class="links" href="">Profile</a></div>
+            {% else %}
+            <div class="nav-btn"><button class="button">Log In</button></div>
+            {% endif %}
         </nav>
         <div class="main-content">
             <div class="buffer"></div>
