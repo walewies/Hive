@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block head_block %}
+<style>
+  body {
+    height: 100vh;
+  }
+</style>
+<title>Sign Up</title>
+{% endblock %}
+
+{% block body_block %}
+<h1>Sign Up</h1>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Sign Up</button>
+</form>
+{% endblock %}
