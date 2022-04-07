@@ -7,4 +7,8 @@
 {% block body_block %}
 <h1>{{ user.username }}</h1>
 <img src="{{ user.profile_pic.url }}" alt="profile_pic">
+<br>
+<a href="{% url 'accounts:logout' %}"><button class="button">Log Out</button></a>
+<br>
+<a href="{% url 'accounts:edit_profile' user.slug %}">Edit Profile</a>
 {% endblock %}

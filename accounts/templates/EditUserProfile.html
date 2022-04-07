@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block head_block %}
+<title>Edit {{ user.username }}</title>
+{% endblock %}
+
+{% block body_block %}
+<h1>Edit {{ user.username }}</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Confirm</button>
+</form>
+{% endblock %}

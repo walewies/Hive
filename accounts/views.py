@@ -1,8 +1,10 @@
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, TemplateView, ListView
+from django.views.generic import CreateView, DetailView, TemplateView, ListView, UpdateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import get_user_model
+from django.http import HttpResponseRedirect
+from django.utils.text import slugify
 from . import forms
 
 # Create your views here.
@@ -23,3 +25,11 @@ class ProfileView(TemplateView):
         # Add in a QuerySet
         context['user'] = self.request.user
         return context
+
+class EditProfileView(UpdateView):
+    model = get_user_model()
+    template_name = "EditUserProfile.html"
+    fields = ("username", "profile_pic", "email")
+
+    def get_success_url(self):
+        return reverse_lazy("accounts:profile", kwargs={"slug": self.request.user.slug })
