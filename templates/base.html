@@ -16,7 +16,7 @@
             <div class="nav-div" id="leaderboard"><a class="links" href="">Leaderboard</a></div>
             {% if user.is_authenticated %}
             <div class="nav-div" id="chats"><a class="links" href="">Chats</a></div>
-            <div class="nav-div" id="profile"><a class="links" href="">Profile</a></div>
+            <div class="nav-div" id="profile"><a class="links" href="{% url 'accounts:profile' user.username %}">Profile</a></div>
             <div class="nav-btn"><a href="{% url 'accounts:logout' %}"><button class="button">Log Out</button></a></div>
             {% else %}
             <div class="nav-btn"><a href="{% url 'accounts:login' %}"><button class="button">Log In</button></a></div>

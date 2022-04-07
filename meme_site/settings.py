@@ -142,3 +142,6 @@ LOGIN_REDIRECT_URL = 'home:home_page'
 LOGOUT_REDIRECT_URL = 'home:home_page'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
