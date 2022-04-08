@@ -11,4 +11,7 @@
     {{ form.as_p }}
     <button type="submit">Confirm</button>
 </form>
+<br>
+<br>
+<a href="{% url 'accounts:change_password' user.slug %}">Change Password</a>
 {% endblock %}
