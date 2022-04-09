@@ -7,7 +7,7 @@ from django.utils.text import slugify
 # Create your models here.
 class User(auth.models.AbstractUser, auth.models.PermissionsMixin):
 
-    profile_pic = models.ImageField(upload_to="images/profiles/", default="images/default_profile.jpeg")
+    profile_pic = models.ImageField(upload_to="profiles/", default="profiles/default_profile.jpeg")
     slug = models.SlugField(max_length=256)
 
     def save(self, *args, **kwargs):     

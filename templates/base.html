@@ -17,8 +17,8 @@
             {% if user.is_authenticated %}
             <a href=""><div class="nav-div" id="chats"><span class="links">Chats</span></div></a>
             <a href="{% url 'accounts:profile' user.slug %}"><div class="nav-div" id="profile"><span class="links">Profile</span></div></a>
-            <div class="nav-btn"><a href=""><button class="button">Add Post</button></a></div>
-            <!-- <div class="nav-btn"><a href="{% url 'accounts:logout' %}"><button class="button">Log Out</button></a></div> -->
+            <div class="nav-btn"><a href="{% url 'posts:new_post' %}"><button class="button">Add Post</button></a></div>
+            <div class="nav-btn"><a href="{% url 'accounts:logout' %}"><button class="button">Log Out</button></a></div>
             {% else %}
             <div class="nav-btn"><a href="{% url 'accounts:login' %}"><button class="button">Log In</button></a></div>
             <div class="nav-btn"><a href="{% url 'accounts:signup' %}"><button class="button">Sign Up</button></a></div>

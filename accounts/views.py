@@ -8,6 +8,7 @@ from django.utils.text import slugify
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, redirect
 from .models import User
+from posts.models import Post
 from . import forms
 
 # Create your views here.
@@ -27,6 +28,7 @@ class ProfileView(TemplateView):
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet
         context['user'] = self.request.user
+        context['posts'] = Post.objects.filter(memer=self.request.user.id)
         return context
 
 class EditProfileView(UpdateView):
@@ -47,9 +49,9 @@ class ChangeUserPassword(TemplateView):
 
 def ValidateUserPassword(request, slug):
     UserObj = User.objects.get(username=request.user.username)
-    print(request.POST.get("old_password"))
-    print(make_password(request.POST.get("old_password")))
-    print(UserObj.password)
+    # print(request.POST.get("old_password"))
+    # print(make_password(request.POST.get("old_password")))
+    # print(UserObj.password)
     if check_password(request.POST.get("old_password"), UserObj.password):
         if request.POST.get("new_password1") == request.POST.get("new_password2"):
             UserObj.set_password(request.POST.get("new_password1"))

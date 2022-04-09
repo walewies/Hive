@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block head_block %}
+<title>Post {{ post.pk }}</title>
+{% endblock %}
+
+{% block body_block %}
+<embed src="{{ post.meme_file.url }}" width="25%" height="auto">
+<br>
+<h3>by {{ user.username }}</h3>
+{% endblock %}
