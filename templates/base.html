@@ -12,12 +12,13 @@
     <body>
         <nav class="navbar">
             <div id="brand"><a class="links" href="{% url 'home:home_page' %}">BRAND</a></div>
-            <div class="nav-div" id="home"><a class="links" href="{% url 'home:home_page' %}">Home</a></div>
-            <div class="nav-div" id="leaderboard"><a class="links" href="">Leaderboard</a></div>
+            <a href="{% url 'home:home_page' %}"><div class="nav-div" id="home"><span class="links">Home</span></div></a>
+            <a href=""><div class="nav-div" id="leaderboard"><span class="links">Leaderboard</span></div></a>
             {% if user.is_authenticated %}
-            <div class="nav-div" id="chats"><a class="links" href="">Chats</a></div>
-            <div class="nav-div" id="profile"><a class="links" href="{% url 'accounts:profile' user.slug %}">Profile</a></div>
-            <div class="nav-btn"><a href="{% url 'accounts:logout' %}"><button class="button">Log Out</button></a></div>
+            <a href=""><div class="nav-div" id="chats"><span class="links">Chats</span></div></a>
+            <a href="{% url 'accounts:profile' user.slug %}"><div class="nav-div" id="profile"><span class="links">Profile</span></div></a>
+            <div class="nav-btn"><a href=""><button class="button">Add Post</button></a></div>
+            <!-- <div class="nav-btn"><a href="{% url 'accounts:logout' %}"><button class="button">Log Out</button></a></div> -->
             {% else %}
             <div class="nav-btn"><a href="{% url 'accounts:login' %}"><button class="button">Log In</button></a></div>
             <div class="nav-btn"><a href="{% url 'accounts:signup' %}"><button class="button">Sign Up</button></a></div>
