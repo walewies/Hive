@@ -27,8 +27,9 @@ class ProfileView(TemplateView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet
-        context['user'] = self.request.user
-        context['posts'] = Post.objects.filter(memer=self.request.user.id)
+        context['user_current'] = self.request.user
+        context['user_profile'] = User.objects.get(slug=self.kwargs['slug'])
+        context['posts'] = Post.objects.filter(memer=context['user_profile'].id)
         return context
 
 class EditProfileView(UpdateView):
