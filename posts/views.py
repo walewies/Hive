@@ -19,13 +19,25 @@ class CreatePost(CreateView):
         obj.save()
         return HttpResponseRedirect(self.get_success_url())
 
-class PostView(TemplateView):
+class PostAndCommentsView(CreateView):
     template_name = "PostView.html"
-    context_object_name = "post"
+    model = Comment
+    context_object_name = "comment"
+    fields = ('body',)
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.memer = self.request.user
+        obj.post = Post.objects.get(id=self.kwargs['pk'])
+        obj.save()
+        return HttpResponseRedirect(self.get_success_url())
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
+        context["user"] = Post.objects.get(id=self.kwargs['pk']).memer
         context["post"] = Post.objects.get(id=self.kwargs['pk'])
+        context["comments"] = Comment.objects.filter(post=self.kwargs['pk'])
         return context
         
+    def get_success_url(self, **kwargs):
+        return reverse_lazy("posts:view_post", kwargs={"pk": self.kwargs['pk']})

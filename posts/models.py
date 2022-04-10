@@ -16,7 +16,7 @@ class Comment(models.Model):
     memer = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
-    comment = models.TextField(max_length=256)
+    body = models.TextField(max_length=256)
 
     def __str__(self):
-        return self.memer.username + "'s comment on " + str(self.id)
+        return "Comment " + str(self.pk) + " by " + self.memer.username + " on post " + str(self.post.pk)
