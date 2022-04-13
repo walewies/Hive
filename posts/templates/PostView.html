@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head_block %}
+{% load static %}
 <title>Post {{ post.pk }}</title>
 {% endblock %}
 
@@ -13,18 +14,43 @@
 {% if not comments %}
     <h5>Looks like there are no comments yet.</h5>
 {% else %}
+    <ul id="comments_list" >
     {% for comment in comments %}
+    <li>
         <a href="{% url 'accounts:profile' comment.memer.slug %}"><h5>{{ comment.memer }}</h5></a>
         <p>{{ comment.body }}</p>
         <br>
+    </li>
     {% endfor %}
+    </ul>
 {% endif %}
 {% if user.is_authenticated %}
     <h3>Add comment</h3>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Add</button>
-    </form>
+    {% csrf_token %}
+    <textarea name="comment_body" id="comment_body" cols="30" rows="10"></textarea>
+    <br>
+    <button class="submit-comment-btn" type="submit">Add</button>
 {% endif %}
+<script>
+    $(document).ready(function() {
+
+    let csrf = $("input[name=csrfmiddlewaretoken]").val()
+
+    $(".submit-comment-btn").click(function() {
+        $.ajax({
+            url: "",
+            type: 'post',
+            data: {
+                comment_body: $("#comment_body").val(),
+                csrfmiddlewaretoken: csrf
+            },
+            success: function(response) {
+                $("#comments_list").append("<li><a href=\"{% url 'accounts:profile' user.slug %}\"><h5>@" + response.comment_memer + "</h5></a><p>" + response.comment_body + "</p><br></li>")
+                $("#comment_body").val("")
+            }
+        })
+    })
+
+    });
+</script>
 {% endblock %}

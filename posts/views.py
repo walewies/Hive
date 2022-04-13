@@ -4,6 +4,8 @@ from .models import Post, Comment
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
+from django.http import JsonResponse
+
 # Create your views here.
 class CreatePost(CreateView):
     model = Post
@@ -19,18 +21,28 @@ class CreatePost(CreateView):
         obj.save()
         return HttpResponseRedirect(self.get_success_url())
 
-class PostAndCommentsView(CreateView):
+class PostAndCommentsView(TemplateView):
     template_name = "PostView.html"
-    model = Comment
-    context_object_name = "comment"
-    fields = ('body',)
+    # model = Comment
+    # context_object_name = "comment"
+    # fields = ('body',)
 
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.memer = self.request.user
-        obj.post = Post.objects.get(id=self.kwargs['pk'])
-        obj.save()
-        return HttpResponseRedirect(self.get_success_url())
+    # def form_valid(self, form):
+    #     obj = form.save(commit=False)
+    #     obj.memer = self.request.user
+    #     obj.post = Post.objects.get(id=self.kwargs['pk'])
+    #     obj.save()
+    #     return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, pk):
+        comment_body = request.POST.get('comment_body')
+        comment = Comment.objects.create(memer=self.request.user, body=comment_body, post=Post.objects.get(id=pk))
+        
+        return JsonResponse({
+            "comment_body": comment.body, 
+            "comment_memer": comment.memer.username,
+            "comment_memer_slug": comment.memer.slug
+            }, status=200)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
