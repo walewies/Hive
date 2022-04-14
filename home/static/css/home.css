@@ -1,0 +1,7 @@
+.like:hover {
+    cursor: pointer;
+}
+
+#likes_amount:hover {
+    cursor: default;
+}

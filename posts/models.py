@@ -5,7 +5,8 @@ from accounts.models import User
 class Post(models.Model):
     memer = models.ForeignKey(User, on_delete=models.CASCADE)
     meme_file = models.FileField(upload_to="posts/")
-    likes = []
+    likes = models.TextField(default="")
+    likes_amount = models.IntegerField(default=0)
 
     description = models.TextField(max_length=256)
 

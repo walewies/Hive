@@ -23,16 +23,6 @@ class CreatePost(CreateView):
 
 class PostAndCommentsView(TemplateView):
     template_name = "PostView.html"
-    # model = Comment
-    # context_object_name = "comment"
-    # fields = ('body',)
-
-    # def form_valid(self, form):
-    #     obj = form.save(commit=False)
-    #     obj.memer = self.request.user
-    #     obj.post = Post.objects.get(id=self.kwargs['pk'])
-    #     obj.save()
-    #     return HttpResponseRedirect(self.get_success_url())
 
     def post(self, request, pk):
         comment_body = request.POST.get('comment_body')

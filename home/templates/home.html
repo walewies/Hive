@@ -1,9 +1,32 @@
 {% extends 'base.html' %}
 
 {% block head_block %}
+{% load static %}
+{% load filter_tags %}
 <title>HomePage</title>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
 {% block body_block %}
-<h2>Hello WOrld</h2>
+    {% csrf_token %}
+    <h1>Hello</h1>
+    {% for post in posts %}
+        <div class="post">
+            <a href="{% url 'accounts:profile' post.memer.slug %}"><h3>{{ post.memer }}</h3></a>
+            <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="25%" height="auto"></a>
+            <br>
+            {% with post.likes|split:"," as likes %}
+                {% if user.slug in likes %}
+                <h3 class="like" name="{{ post.pk }}">Unlike Likes: {{ post.likes_amount }}</h3>
+                {% else %}
+                <h3 class="like" name="{{ post.pk }}">Like Likes: {{ post.likes_amount }}</h3>
+                {% endif %}
+                <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+                <br>
+            {% endwith %}
+        </div>
+    {% endfor %}
+    <h4>Looks like you've reached the end! (Refresh for more)</h4>
+    <br>
+    <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
