@@ -9,7 +9,6 @@
 
 {% block body_block %}
     {% csrf_token %}
-    <h1>Hello</h1>
     {% for post in posts %}
         <div class="post">
             <a href="{% url 'accounts:profile' post.memer.slug %}"><h3>{{ post.memer }}</h3></a>

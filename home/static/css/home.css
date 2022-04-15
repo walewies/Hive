@@ -5,3 +5,8 @@
 #likes_amount:hover {
     cursor: default;
 }
+
+#home {
+    border-radius: 10px;
+    background-color: #548CFF;
+}
