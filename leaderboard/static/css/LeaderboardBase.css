@@ -1,0 +1,36 @@
+#leaderboard {
+    border-radius: 10px;
+    background-color: #548CFF;
+}
+
+.leaderboard-navbar {
+    background-color: var(--navbar-bg-color);
+    width: 100%;
+    height: var(--navbar-height);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: var(--navbar-height)
+}
+
+.leaderboard-nav-div {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+
+.leaderboard-nav-div:hover {
+    border-radius: 10px;
+    background-color: #548CFF;
+}
+
+.leaderboard-nav-div:hover {
+    cursor: pointer;
+}
+
+.like:hover {
+    cursor: pointer;
+}

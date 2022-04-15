@@ -4,6 +4,8 @@ from .models import Post, Comment
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
+from datetime import datetime
+
 from django.http import JsonResponse
 
 # Create your views here.
@@ -18,6 +20,7 @@ class CreatePost(CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.memer = self.request.user
+        obj.datetime_posted = datetime.now()
         obj.save()
         return HttpResponseRedirect(self.get_success_url())
 

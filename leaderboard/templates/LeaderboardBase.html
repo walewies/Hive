@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block head_block %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/LeaderboardBase.css' %}">
+    {% block head_content %}
+    {% endblock %}
+{% endblock %}
+
+{% block body_block %}
+<nav class="leaderboard-navbar">
+    <div class="leaderboard-nav-div" id="daily"><span class="links">Daily</span></div>
+    <div class="leaderboard-nav-div" id="weekly"><span class="links">Weekly</span></div>
+    <div class="leaderboard-nav-div" id="monthly"><span class="links">Monthly</span></div>
+    <div class="leaderboard-nav-div" id="yearly"><span class="links">Yearly</span></div>
+    <div class="leaderboard-nav-div" id="all-time"><span class="links">All Time</span></div>
+</nav>
+    {% block body_content %}
+    {% endblock %}
+<script>
+    $(document).ready(function() {
+
+        $(".leaderboard-nav-div").click(function() {
+            if ($(this).attr("id") === "daily") {
+                location.href = "{% url 'leaderboard:daily' %}"
+            } else if ($(this).attr("id") === "weekly") {
+                location.href = "{% url 'leaderboard:weekly' %}"
+            } else if ($(this).attr("id") === "monthly") {
+                location.href = "{% url 'leaderboard:monthly' %}"
+            } else if ($(this).attr("id") === "yearly") {
+                location.href = "{% url 'leaderboard:yearly' %}"
+            } else if ($(this).attr("id") === "all-time") {
+                location.href = "{% url 'leaderboard:all_time' %}"
+            }
+        })
+
+    })
+</script>
+<script src="{% static 'js/LeaderboardBase.js' %}"></script>
+{% endblock %}
