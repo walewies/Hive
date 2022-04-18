@@ -2,6 +2,7 @@
 
 {% block head_block %}
 {% load static %}
+{% load filter_tags %}
 <link rel="stylesheet" href="{% static 'css/LeaderboardBase.css' %}">
     {% block head_content %}
     {% endblock %}
@@ -15,8 +16,34 @@
     <div class="leaderboard-nav-div" id="yearly"><span class="links">Yearly</span></div>
     <div class="leaderboard-nav-div" id="all-time"><span class="links">All Time</span></div>
 </nav>
-    {% block body_content %}
-    {% endblock %}
+{% csrf_token %}
+<ol>
+    {% for post in leaderboard %}
+        <li>
+            <div class="post">
+                <a href="{% url 'accounts:profile' post.memer.slug %}"><h3>{{ post.memer }}</h3></a>
+                {% with post.memer.followers|split:"," as followers %}
+                    {% if user.slug in followers %}
+                    <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Unfollow</p>
+                    {% else %}
+                    <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Follow</p>
+                    {% endif %}
+                {% endwith %}
+                <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="25%" height="auto"></a>
+                <br>
+                {% with post.likes|split:"," as likes %}
+                    {% if user.slug in likes %}
+                    <h3 class="like" post_pk="{{ post.pk }}">Unlike Likes: {{ post.likes_amount }}</h3>
+                    {% else %}
+                    <h3 class="like" post_pk="{{ post.pk }}">Like Likes: {{ post.likes_amount }}</h3>
+                    {% endif %}
+                {% endwith %}
+                <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+                <br>
+            </div>
+        </li>
+    {% endfor %}
+</ol>
 <script>
     $(document).ready(function() {
 

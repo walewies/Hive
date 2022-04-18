@@ -7,6 +7,8 @@ from django.http import JsonResponse
 
 from datetime import timedelta, datetime
 
+from accounts.models import User
+
 # Create your views here.
 
 class BaseLeaderboard(TemplateView):
@@ -15,28 +17,60 @@ class BaseLeaderboard(TemplateView):
         post_pk = request.POST.get("post_pk")
         user = self.request.user.slug
         current_post = Post.objects.get(pk=int(post_pk))
-        current_likes_list = current_post.likes.split(",")
-        order = ""
 
-        if user in current_likes_list:
-            current_likes_list.remove(user)
-            order = "like"
+        # Like/Unlike post on request.
+        if request.POST.get("task") == "like":
+            current_likes_list = current_post.likes.split(",")
+            order = ""
+
+            if user in current_likes_list:
+                current_likes_list.remove(user)
+                order = "like"
+            else:
+                current_likes_list.append(user)
+                order = "unlike"
+
+            current_likes_string = ""
+            current_likes_string += current_likes_list[0]
+            for i in range(1, len(current_likes_list)):
+                current_likes_string += ","
+                current_likes_string += current_likes_list[i]
+            current_likes_amount = len(current_likes_list)
+            Post.objects.filter(pk=int(post_pk)).update(likes=current_likes_string)
+            Post.objects.filter(pk=int(post_pk)).update(likes_amount=current_likes_amount-1)
+            return JsonResponse({
+                "order": order,
+                "likes_amount":  current_likes_amount - 1 # -1 Accounts for empty string at index 0.
+            }, status=200)
+
+        # Follow/Unfollow Post-User on request.
         else:
-            current_likes_list.append(user)
-            order = "unlike"
+            post_user_model = User.objects.filter(slug=current_post.memer.slug)
+            followers = current_post.memer.followers.split(",")
+            string_followers = ""
 
-        current_likes_string = ""
-        current_likes_string += current_likes_list[0]
-        for i in range(1, len(current_likes_list)):
-            current_likes_string += ","
-            current_likes_string += current_likes_list[i]
-        current_likes_amount = len(current_likes_list)
-        Post.objects.filter(pk=int(post_pk)).update(likes=current_likes_string)
-        Post.objects.filter(pk=int(post_pk)).update(likes_amount=current_likes_amount-1)
-        return JsonResponse({
-            "order": order,
-            "likes_amount":  current_likes_amount - 1 # -1 Accounts for empty string at index 0.
-        }, status=200)
+            # Unfollow
+            if user in followers:
+                followers.remove(user)
+                order = "follow"
+
+            # Follow
+            else:
+                followers.append(user)
+                order = "unfollow"
+
+            for follower in followers:
+                string_followers += "," + follower
+            
+            num_followers = len(followers) - 1 # -1 Accounts for empty string at index 0.
+
+            post_user_model.update(followers=string_followers)
+            post_user_model.update(followers_amount=num_followers)
+
+            return JsonResponse({
+                "order": order,
+                "post_user": current_post.memer.slug
+            }, status=200)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

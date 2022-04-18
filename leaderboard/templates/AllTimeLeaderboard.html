@@ -2,31 +2,6 @@
 
 {% block head_content %}
 {% load static %}
-{% load filter_tags %}
 <link rel="stylesheet" href="{% static 'css/AllTimeLeaderboard.css' %}">
 <title>All Time Leaderboard</title>
-{% endblock %}
-
-{% block body_content %}
-{% csrf_token %}
-<ol>
-{% for post in leaderboard %}
-    <li>
-        <div class="post">
-            <a href="{% url 'accounts:profile' post.memer.slug %}"><h3>{{ post.memer }}</h3></a>
-            <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="25%" height="auto"></a>
-            <br>
-            {% with post.likes|split:"," as likes %}
-                {% if user.slug in likes %}
-                <h3 class="like" name="{{ post.pk }}">Unlike Likes: {{ post.likes_amount }}</h3>
-                {% else %}
-                <h3 class="like" name="{{ post.pk }}">Like Likes: {{ post.likes_amount }}</h3>
-                {% endif %}
-                <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
-                <br>
-            {% endwith %}
-        </div>
-    </li>
-{% endfor %}
-</ol>
 {% endblock %}

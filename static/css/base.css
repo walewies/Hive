@@ -114,6 +114,10 @@ a {
     margin-top: var(--navbar-height);
 } 
 
+.follow:hover {
+    cursor: pointer;
+}
+
 /* @media only screen and (max-width:1200) {
     .nav-div {
         flex: 1;
