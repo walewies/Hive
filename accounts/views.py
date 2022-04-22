@@ -27,9 +27,14 @@ class ProfileView(TemplateView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet
+        context['followers'] = self.request.user.followers.split(",")[1:] # [1:] Accounts for initial empty string
+        context['followers_amount'] = self.request.user.followers_amount
+        context['following'] = self.request.user.following.split(",")[1:]
+        context['following_amount'] = self.request.user.following_amount
         context['user_current'] = self.request.user
         context['user_profile'] = User.objects.get(slug=self.kwargs['slug'])
         context['posts'] = Post.objects.filter(memer=context['user_profile'].id)
+        context['posts_amount'] = len(context['posts'])
         return context
 
 class EditProfileView(UpdateView):
@@ -70,4 +75,36 @@ class PasswordChangeSuccess(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["user"] = self.request.user
+        return context
+
+class UserFollowing(TemplateView):
+    template_name = "UserFollowing.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        following_slugs = self.request.user.following.split(",")
+        context["following"] = []
+
+        for slug in following_slugs:
+            context["following"].append(User.objects.get(slug=slug))
+
+        return context
+
+class UserFollowers(TemplateView):
+    template_name = "UserFollowers.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        followers_slugs = self.request.user.followers.split(",")
+        context["followers"] = []
+
+        for slug in followers_slugs:
+            context["followers"].append(User.objects.get(slug=slug))
+
+        following_slugs = self.request.user.following.split(",")
+        context["following"] = []
+
+        for slug in following_slugs:
+            context["following"].append(slug)
+
         return context

@@ -72,31 +72,52 @@ class HomePageView(TemplateView):
 
         # Follow/Unfollow Post-User on request.
         else:
+            post_user = current_post.memer.slug
             post_user_model = User.objects.filter(slug=current_post.memer.slug)
-            followers = current_post.memer.followers.split(",")
+            current_user_model = User.objects.filter(slug=self.request.user.slug)
+
+            # Accounts for possible initial empty string.
+            if len(current_post.memer.followers) != 0:
+                followers = current_post.memer.followers.split(",")
+            else:
+                followers = []
+
+            # Accounts for possible initial empty string.
+            if len(self.request.user.following) != 0:
+                following = self.request.user.following.split(",")
+            else:
+                following = []
+
+            string_following = ""
             string_followers = ""
 
             # Unfollow
             if user in followers:
                 followers.remove(user)
+                following.remove(post_user)
                 order = "follow"
 
             # Follow
             else:
                 followers.append(user)
+                following.append(post_user)
                 order = "unfollow"
 
-            for follower in followers:
-                string_followers += "," + follower
+            string_followers = ",".join(followers)
+            string_following = ",".join(following)
             
-            num_followers = len(followers) - 1 # -1 Accounts for empty string at index 0.
+            num_followers = len(followers)
+            num_following = len(following)
 
             post_user_model.update(followers=string_followers)
             post_user_model.update(followers_amount=num_followers)
 
+            current_user_model.update(following=string_following)
+            current_user_model.update(following_amount=num_following)
+
             return JsonResponse({
                 "order": order,
-                "post_user": current_post.memer.slug
+                "post_user": current_post.memer.slug # To change all posts regarding following.
             }, status=200)
             
 
@@ -104,7 +125,12 @@ class HomePageView(TemplateView):
         posts_num = 100
         context = super().get_context_data(**kwargs)
         context["user"] = self.request.user
-        list_user_interests = self.request.user.interests.split(",")
+
+        if self.request.user.is_authenticated:
+            list_user_interests = self.request.user.interests.split(",")
+        else:
+            context['posts'] = random.sample(list(Post.objects.all()), k=len(Post.objects.all()))
+            return context
         
         if len(Post.objects.all()) < posts_num or len(list_user_interests) < 2:
             working_posts = []

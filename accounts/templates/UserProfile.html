@@ -11,6 +11,13 @@
 <h1>Interests: {{ user.interests }}</h1>
 <img src="{{ user_profile.profile_pic.url }}" alt="profile_pic">
 <br>
+<p>Posts: {{ posts_amount }}</p>
+{% if user_current == user_profile %}
+<a href="{% url 'accounts:following' user_profile.slug %}"><p>Following: {{ following_amount }}</p></a>
+<a href="{% url 'accounts:followers' user_profile.slug %}"><p>Followers: {{ followers_amount }}</p></a>
+{% else %}
+<p>Followers: {{ followers_amount }}</p>
+{% endif %}
 <br>
 <h1>Posts</h1>
 {% if not posts %}

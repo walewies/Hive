@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+<h1>Following</h1>
+
+{% for memer in following %}
+<a href="{% url 'accounts:profile' memer.slug %}">{{ memer.username }}</a>  <span class="unfollow">Unfollow</span>
+<br>
+<br>
+{% endfor %}
+{% endblock %}

@@ -14,6 +14,8 @@ class User(auth.models.AbstractUser, auth.models.PermissionsMixin):
 
     followers = models.TextField(blank=True)
     followers_amount = models.PositiveIntegerField(default=0)
+    following = models.TextField(blank=True)
+    following_amount = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):     
         self.slug = self.username
