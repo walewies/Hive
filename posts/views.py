@@ -39,7 +39,8 @@ class PostAndCommentsView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["user"] = Post.objects.get(id=self.kwargs['pk']).memer
+        context["post_user"] = Post.objects.get(id=self.kwargs['pk']).memer
+        context["current_user"] = self.request.user
         context["post"] = Post.objects.get(id=self.kwargs['pk'])
         context["comments"] = Comment.objects.filter(post=self.kwargs['pk'])
         return context

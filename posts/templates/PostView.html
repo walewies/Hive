@@ -8,7 +8,7 @@
 {% block body_block %}
 <embed src="{{ post.meme_file.url }}" width="25%" height="auto">
 <br>
-<h4>by {{ user.username }}</h3>
+<h4>by {{ post_user.username }}</h3>
 <br>
 <h3>Comments:</h4>
 {% if not comments %}
@@ -24,13 +24,14 @@
     {% endfor %}
     </ul>
 {% endif %}
-{% if user.is_authenticated %}
+{% if current_user.is_authenticated %}
     <h3>Add comment</h3>
     {% csrf_token %}
     <textarea name="comment_body" id="comment_body" cols="30" rows="10"></textarea>
     <br>
     <button class="submit-comment-btn" type="submit">Add</button>
 {% endif %}
+{% if current_user.is_authenticated %}
 <script>
     $(document).ready(function() {
 
@@ -45,7 +46,7 @@
                 csrfmiddlewaretoken: csrf
             },
             success: function(response) {
-                $("#comments_list").append("<li><a href=\"{% url 'accounts:profile' user.slug %}\"><h5>@" + response.comment_memer + "</h5></a><p>" + response.comment_body + "</p><br></li>")
+                $("#comments_list").append("<li><a href=\"{% url 'accounts:profile' current_user.slug %}\"><h5>@" + response.comment_memer + "</h5></a><p>" + response.comment_body + "</p><br></li>")
                 $("#comment_body").val("")
             }
         })
@@ -53,4 +54,5 @@
 
     });
 </script>
+{% endif %}
 {% endblock %}
