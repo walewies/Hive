@@ -34,10 +34,13 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.order === "like") {
-                    $(that).text("Like Likes: " + response.likes_amount)
+                    console.log("Also Here")
+                    $(that).text("Like")
+                    
                 } else {
-                    $(that).text("Unlike Likes: " + response.likes_amount)
+                    $(that).text("Unlike")
                 }
+                $(".likes_amount_post" + $(that).attr("post_pk")).text("Likes: " + response.likes_amount)
             }
         })
     })
