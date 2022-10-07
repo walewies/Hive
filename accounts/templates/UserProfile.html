@@ -7,17 +7,23 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>{{ user_profile.username }}</h1>
-<h1>Interests: {{ user.interests }}</h1>
-<img src="{{ user_profile.profile_pic.url }}" alt="profile_pic">
-<br>
-<p>Posts: {{ posts_amount }}</p>
-{% if user_current == user_profile %}
-<a href="{% url 'accounts:following' user_profile.slug %}"><p>Following: {{ following_amount }}</p></a>
-<a href="{% url 'accounts:followers' user_profile.slug %}"><p>Followers: {{ followers_amount }}</p></a>
-{% else %}
-<p>Followers: {{ followers_amount }}</p>
-{% endif %}
+<div class="profile-header">
+    <!-- <h1>Interests: {{ user_profile.interests }}</h1> -->
+    <div class="image-cropper">
+        <img class="profile-pic" src="{{ user_profile.profile_pic.url }}" alt="profile_pic">
+    </div>
+    <div class="user-info">
+        <h1>{{ user_profile.username }}</h1>
+        <br>
+        <p>Posts: {{ posts_amount }}</p>
+        {% if user_current == user_profile %}
+        <a href="{% url 'accounts:following' user_profile.slug %}"><p>Following: {{ following_amount }}</p></a>
+        <a href="{% url 'accounts:followers' user_profile.slug %}"><p>Followers: {{ followers_amount }}</p></a>
+        {% else %}
+        <p>Followers: {{ followers_amount }}</p>
+        {% endif %}
+    </div>
+</div>
 <br>
 <h1>Posts</h1>
 {% if not posts %}

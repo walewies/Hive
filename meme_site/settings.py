@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'home',
     'accounts',
     'posts',
-    'leaderboard'
+    'leaderboard',
 ]
 
 MIDDLEWARE = [

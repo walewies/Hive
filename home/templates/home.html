@@ -11,33 +11,48 @@
     {% csrf_token %}
     {% for post in posts %}
         <div class="post">
-            <a href="{% url 'accounts:profile' post.memer.slug %}"><h3>{{ post.memer }}</h3></a>
-            {% if user.is_authenticated %}
-                {% with post.memer.followers|split:"," as followers %}
-                    {% if user.slug in followers %}
-                    <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Unfollow</p>
-                    {% else %}
-                    <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Follow</p>
-                    {% endif %}
-                {% endwith %} 
-            {% endif %}
-            <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="25%" height="auto"></a>
+            <div class="post-header">
+                <!-- <div class="profile-pic"><img src="{{ post.memer.profile_pic.url }}" alt="Profile Pic"></div> -->
+                <a href="{% url 'accounts:profile' post.memer.slug %}"><h3>{{ post.memer }}</h3></a>
+                {% if user.is_authenticated %}
+                    {% with post.memer.followers|split:"," as followers %}
+                        {% if user.slug in followers %}
+                        <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Unfollow</p>
+                        {% else %}
+                        <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Follow</p>
+                        {% endif %}
+                    {% endwith %} 
+                {% endif %}
+            </div>
+            
+            <div><a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="100%" height="auto"></a></div>
             <br>
-            {% if user.is_authenticated %}
-                {% with post.likes|split:"," as likes %}
-                    {% if user.slug in likes %}
-                    <h3 class="like" post_pk="{{ post.pk }}">Unlike</h3>
-                    {% else %}
-                    <h3 class="like" post_pk="{{ post.pk }}" >Like</h3>
+            <div class="post-footer">
+                <div class="likes">
+                    {% if user.is_authenticated %}
+                        {% with post.likes|split:"," as likes %}
+                            {% if user.slug in likes %}
+                            <h3 class="like" post_pk="{{ post.pk }}">Unlike</h3>
+                            {% else %}
+                            <h3 class="like" post_pk="{{ post.pk }}" >Like</h3>
+                            {% endif %}
+                        {% endwith %}
                     {% endif %}
-                {% endwith %}
-            {% endif %}
-            <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
-            <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+                    <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
+                </div>
+                <div class="comments">
+                    <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+                    {% for key, value in comments_by_post.items %}
+                        {% if key == post %}
+                        <h3>Comments: {{ value }}</h3>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
             <br>
         </div>
     {% endfor %}
-    <h4>Looks like you've reached the end! (Refresh for more)</h4>
+    <div class="end-message"><h4>Looks like you've reached the end! (Refresh for more)</h4></div>
     <br>
     <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

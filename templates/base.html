@@ -12,12 +12,11 @@
     </head>
     <body>
         <nav class="navbar">
-            <div id="brand"><a class="links" href="{% url 'home:home_page' %}">BRAND</a></div>
-            <div class="nav-div" id="home"><span class="links">Home</span></div></a>
-            <div class="nav-div" id="leaderboard"><span class="links">Leaderboard</span></div></a>
+            <div id="brand"><a class="links" href="{% url 'home:home_page' %}">MeccaMeme</a></div>
+            <div class="nav-div" id="home"><span class="links">Home</span></div>
+            <div class="nav-div" id="leaderboard"><span class="links">Leaderboard</span></div>
             {% if user.is_authenticated %}
-            <div class="nav-div" id="chats"><span class="links">Chats</span></div></a>
-            <div class="nav-div" id="profile"><span class="links">Profile</span></div></a>
+            <div class="nav-div" id="profile"><span class="links">Profile</span></div>
             <div class="nav-btn"><a href="{% url 'posts:new_post' %}"><button class="button">Add Post</button></a></div>
             <div class="nav-btn"><a href="{% url 'accounts:logout' %}"><button class="button">Log Out</button></a></div>
             {% else %}
@@ -43,8 +42,6 @@
                     location.href = "{% url 'home:home_page' %}"
                 } else if ($(this).attr("id") === "leaderboard") {
                     location.href = "{% url 'leaderboard:daily' %}"
-                } else if ($(this).attr("id") === "chats") {
-                    location.href = "{% url 'home:home_page' %}"
                 } else if ($(this).attr("id") === "profile") {
                     location.href = "{% url 'accounts:profile' user.slug %}"
                 }

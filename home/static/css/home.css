@@ -10,3 +10,50 @@
     border-radius: 10px;
     background-color: #548CFF;
 }
+
+.post {
+    /* padding-left: 5%;
+    padding-right: 5%; */
+    padding-bottom: 2%;
+    background-color: lightgray;
+    border-radius: 5%;
+    margin: 5% 5% 5% 5%;
+}
+
+.post-header {
+    /* border-radius: 50%; */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    /* background-color: lightpink; */
+    padding: 2% 5% 0% 5%;
+    display: flex;
+}
+
+.post-footer {
+    padding: 2% 5% 0% 5%;
+    display: flex;
+}
+
+.likes {
+    flex: 1;
+}
+
+.comments {
+    margin-left: 50%;
+    flex: 1;
+}
+
+.follow {
+    text-align: right;
+    flex: 1;
+}
+
+.profile-pic {
+    /* height: 10px; */
+    width: auto;
+    border-radius: 100%;
+}
+
+.end-message {
+    text-align: center;
+}

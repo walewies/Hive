@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from posts.models import Post
+from posts.models import Post, Comment
 from accounts.models import User
 
 from django.http import JsonResponse
@@ -183,5 +183,13 @@ class HomePageView(TemplateView):
                 working_posts.append(meme)
 
             context["posts"] = random.sample(list(dict.fromkeys(working_posts)), len(list(dict.fromkeys(working_posts)))) # removes duplicate items and shuffles.
+
+
+        # Makes list of comments amounts by post.
+        comments_by_post = {}
+        for post in context["posts"]:
+            comments_by_post[post] = len(Comment.objects.filter(post=post))
+
+        context["comments_by_post"] = comments_by_post
             
         return context

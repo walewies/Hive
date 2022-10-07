@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block body_block %}
+{% if current_user != profile_user %}
+<h1>Oops! Looks like you've stumbled onto the wrong page. Make sure you've entered the correct URL.</h1>
+{% else %}
 <h1>Following</h1>
 
 {% for memer in following %}
@@ -8,4 +11,5 @@
 <br>
 <br>
 {% endfor %}
+{% endif %}
 {% endblock %}

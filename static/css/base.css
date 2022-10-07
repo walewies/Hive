@@ -109,7 +109,7 @@ a {
 .middle-content {
     background-color: white;
     color: blue;
-    flex: 4;
+    flex: 1;
     /* height:100vh; */
     margin-top: var(--navbar-height);
 } 

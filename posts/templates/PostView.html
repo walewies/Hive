@@ -3,34 +3,61 @@
 {% block head_block %}
 {% load static %}
 <title>Post {{ post.pk }}</title>
+<link rel="stylesheet" href="{% static 'css/PostView.css' %}">
 {% endblock %}
 
 {% block body_block %}
-<embed src="{{ post.meme_file.url }}" width="25%" height="auto">
-<br>
-<h4>by {{ post_user.username }}</h3>
-<br>
-<h3>Comments:</h4>
-{% if not comments %}
-    <h5>Looks like there are no comments yet.</h5>
-{% else %}
-    <ul id="comments_list" >
-    {% for comment in comments %}
-    <li>
-        <a href="{% url 'accounts:profile' comment.memer.slug %}"><h5>{{ comment.memer }}</h5></a>
-        <p>{{ comment.body }}</p>
-        <br>
-    </li>
-    {% endfor %}
-    </ul>
-{% endif %}
+<div class="post">
+    <div class="post-header">
+        <h4>@{{ post_user.username }}</h3>
+        {% if user.is_authenticated %}
+            {% if user.slug in followers %}
+            <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Unfollow</p>
+            {% else %}
+            <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Follow</p>
+            {% endif %}
+        {% endif %}
+    </div>
+    <embed src="{{ post.meme_file.url }}" width="100%" height="auto">
+    <div class="post-footer">
+        {% if user.is_authenticated %}
+            {% if user.slug in likes %}
+            <h3 class="like" post_pk="{{ post.pk }}">Unlike</h3>
+            {% else %}
+            <h3 class="like" post_pk="{{ post.pk }}" >Like</h3>
+            {% endif %}
+        {% endif %}
+        <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
+    </div>
+</div>
+
 {% if current_user.is_authenticated %}
+<div class="add-comment">
     <h3>Add comment</h3>
     {% csrf_token %}
     <textarea name="comment_body" id="comment_body" cols="30" rows="10"></textarea>
     <br>
-    <button class="submit-comment-btn" type="submit">Add</button>
+    <button class="submit-comment-btn" type="submit">I hereby publish thee!!!</button>
+</div>
 {% endif %}
+
+<div class="comments">
+    <h3>Comments:</h4>
+    {% if not comments %}
+        <h5>Looks like there are no comments yet.</h5>
+    {% else %}
+        <ul id="comments_list" >
+        {% for comment in comments %}
+        <li>
+            <a href="{% url 'accounts:profile' comment.memer.slug %}"><h5>{{ comment.memer }}</h5></a>
+            <p>{{ comment.body }}</p>
+            <br>
+        </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
 {% if current_user.is_authenticated %}
 <script>
     $(document).ready(function() {
@@ -54,5 +81,6 @@
 
     });
 </script>
+<script src="{% static 'js/home.js' %}"></script>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,57 @@
+.comments {
+    padding: 0% 5% 5% 5%;
+}
+
+.add-comment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+textarea {
+    width: 95%;
+    resize: none;
+}
+
+.post {
+    /* padding-left: 5%;
+    padding-right: 5%; */
+    padding-bottom: 2%;
+    background-color: lightgray;
+    border-radius: 5%;
+    margin: 5% 5% 5% 5%;
+}
+
+.post-header {
+    /* border-radius: 50%; */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    /* background-color: lightpink; */
+    padding: 2% 5% 0% 5%;
+    display: flex;
+}
+
+.post-footer {
+    padding: 2% 5% 0% 5%;
+}
+
+.follow {
+    text-align: right;
+    flex: 1;
+}
+
+.like:hover {
+    cursor: pointer;
+}
+
+#likes_amount:hover {
+    cursor: default;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.add-comment {
+    width: 100%;
+}
