@@ -48,6 +48,15 @@
                         {% endif %}
                     {% endfor %}
                 </div>
+                {% if user.is_authenticated %}
+                    <div class="save-post">
+                        {% if post in saved_posts %}
+                            <h3 class="save" post_pk="{{ post.pk }}">Unsave</h3>
+                        {% else %}
+                            <h3 class="save" post_pk="{{ post.pk }}">Save</h3>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
             <br>
         </div>

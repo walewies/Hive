@@ -48,6 +48,10 @@
     flex: 1;
 }
 
+.save:hover {
+    cursor: pointer;
+}
+
 .profile-pic {
     /* height: 10px; */
     width: auto;

@@ -2,7 +2,7 @@ $(document).ready(function() {
     let csrf = $("input[name=csrfmiddlewaretoken]").val()
 
     $(".follow").click(function() {
-        that = this
+        let that = this;
         $.ajax({
             url: "",
             method: "post",
@@ -13,9 +13,9 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.order === "unfollow") {
-                    $(".follow[post_user=" + response.post_user +"]").text("Unfollow")
+                    $(that).text("Unfollow")
                 } else {
-                    $(".follow[post_user=" + response.post_user +"]").text("Follow")
+                    $(that).text("Follow")
                 }
             }
         })
@@ -34,7 +34,6 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.order === "like") {
-                    console.log("Also Here")
                     $(that).text("Like")
                     
                 } else {
@@ -45,4 +44,23 @@ $(document).ready(function() {
         })
     })
 
+    $(".save").click(function() {
+        let that = this
+        $.ajax({
+            url: "",
+            method: "post",
+            data: {
+                task: "save",
+                post_pk: $(this).attr("post_pk"),
+                csrfmiddlewaretoken: csrf
+            },
+            success: function(response) {
+                if (response.order === "save") {
+                    $(that).text("Save")
+                } else {
+                    $(that).text("Unsave")
+                }  
+            }
+        })
+    })   
 })

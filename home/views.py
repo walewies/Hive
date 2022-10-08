@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from posts.models import Post, Comment
+from posts.models import Post, Comment, Saved
 from accounts.models import User
 
 from django.http import JsonResponse
@@ -71,7 +71,7 @@ class HomePageView(TemplateView):
 
 
         # Follow/Unfollow Post-User on request.
-        else:
+        elif request.POST.get("task") == "follow":
             post_user = current_post.memer.slug
             post_user_model = User.objects.filter(slug=current_post.memer.slug)
             current_user_model = User.objects.filter(slug=self.request.user.slug)
@@ -118,6 +118,22 @@ class HomePageView(TemplateView):
             return JsonResponse({
                 "order": order,
                 "post_user": current_post.memer.slug # To change all posts regarding following.
+            }, status=200)
+        
+        # Save/Unsave post on command.
+        elif request.POST.get("task") == "save":
+            # Unsave
+            if Saved.objects.filter(post=current_post, memer=self.request.user):
+                unsaved_post = Saved.objects.get(post=current_post, memer=self.request.user)
+                unsaved_post.delete()
+                order = "save"
+            # Save
+            else:
+                Saved.objects.create(post=current_post, memer=self.request.user)
+                order = "unsave"
+
+            return JsonResponse({
+                "order": order
             }, status=200)
             
 
@@ -191,5 +207,11 @@ class HomePageView(TemplateView):
             comments_by_post[post] = len(Comment.objects.filter(post=post))
 
         context["comments_by_post"] = comments_by_post
+
+        # Makes a list of all the saved posts of the current user.
+        saved_posts_raw = Saved.objects.filter(memer=self.request.user)
+        context["saved_posts"] = []
+        for post in saved_posts_raw:
+            context["saved_posts"].append(post.post)
             
         return context
