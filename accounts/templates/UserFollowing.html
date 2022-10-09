@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
 
+{% block head_block %}
+{% load static %}
+<title>Following</title>
+{% endblock %}
+
 {% block body_block %}
 {% if current_user != profile_user %}
 <h1>Oops! Looks like you've stumbled onto the wrong page. Make sure you've entered the correct URL.</h1>
 {% else %}
 <h1>Following</h1>
+{% csrf_token %}
 
 {% for follow in following %}
-    <a href="{% url 'accounts:profile' follow.following.slug %}">{{ follow.following.username }}</a>  <span class="unfollow">Unfollow</span>
+    <a href="{% url 'accounts:profile' follow.following.slug %}">{{ follow.following.username }}</a>  <span class="follow" follow_user="{{ follow.following.slug }}">Unfollow</span>
     <br>
     <br>
 {% endfor %}
 {% endif %}
+<script src="{% static 'js/follow.js' %}"></script>
 {% endblock %}

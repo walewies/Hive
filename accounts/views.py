@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, TemplateView, ListView, UpdateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import get_user_model
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.text import slugify
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, redirect
@@ -78,6 +78,35 @@ class PasswordChangeSuccess(TemplateView):
 class UserFollowing(TemplateView):
     template_name = "UserFollowing.html"
 
+    def post(self, request, slug):
+        follow_user = User.objects.get(slug=request.POST.get("follow_user"))
+        current_user = self.request.user
+        follow_user_model = User.objects.filter(slug=follow_user.slug)
+        current_user_model = User.objects.filter(slug=current_user.slug)
+
+        # Follow/Unfollow
+        if request.POST.get("task") == "follow":
+
+            # Unfollow
+            if Follow.objects.filter(following=follow_user, follower=self.request.user):
+                follow_obj = Follow.objects.get(following=follow_user, follower=self.request.user)
+                follow_obj.delete()
+                order = "follow"
+            # Follow
+            else:
+                Follow.objects.create(following=follow_user, follower=self.request.user)
+                order = "unfollow"
+
+            follow_user_followers = len(Follow.objects.filter(following=follow_user))
+            current_user_following =  len(Follow.objects.filter(follower=current_user))
+
+            follow_user_model.update(followers_amount=follow_user_followers)
+            current_user_model.update(following_amount=current_user_following)
+
+            return JsonResponse({
+                "order": order,
+            }, status=200)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -89,6 +118,26 @@ class UserFollowing(TemplateView):
 
 class UserFollowers(TemplateView):
     template_name = "UserFollowers.html"
+
+    def post(self, request, slug):
+        follow_user = User.objects.get(slug=request.POST.get("follow_user"))
+
+        # Follow/Unfollow
+        if request.POST.get("task") == "follow":
+
+            # Unfollow
+            if Follow.objects.filter(following=follow_user, follower=self.request.user):
+                follow_obj = Follow.objects.get(following=follow_user, follower=self.request.user)
+                follow_obj.delete()
+                order = "follow"
+            # Follow
+            else:
+                Follow.objects.create(following=follow_user, follower=self.request.user)
+                order = "unfollow"
+
+            return JsonResponse({
+                "order": order,
+            }, status=200)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
