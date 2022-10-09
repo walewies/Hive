@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from posts.models import Post, Comment, Saved
-from accounts.models import User
+from posts.models import Post, Comment, Save, Like
+from accounts.models import User, Follow
 
 from django.http import JsonResponse
 
@@ -20,8 +20,8 @@ class HomePageView(TemplateView):
 
         # Like/Unlike post on request.
         if request.POST.get("task") == "like":
-            user_model = User.objects.filter(slug=user)
-            list_user_interests = user_model[0].interests.split(",")
+            user_model = User.objects.filter(slug=user) # .get() does not allow .update() on object
+            list_user_interests = user_model[0].interests.split(",") # [0] because .filter() returns queryset
             if list_user_interests[0] == "":
                 list_user_interests.pop(0) # removes initial empty string
             dict_user_interests = {}
@@ -31,22 +31,21 @@ class HomePageView(TemplateView):
                     dict_user_interests[list_user_interests[i].lower()] = int(list_user_interests[i+1])
 
             current_post_description = current_post.description.split(",")
-            current_likes_list = current_post.likes.split(",")
             order = ""
 
-            if user in current_likes_list: # Unlike post
-                current_likes_list.remove(user)
-                for element in current_post_description:
-                    dict_user_interests[element.lower()] -= 1
+            # Unlike
+            if Like.objects.filter(post=current_post, memer=self.request.user):
+                liked_post = Like.objects.get(post=current_post, memer=self.request.user)
+                liked_post.delete()
                 order = "like"
-            else: # Like post
-                current_likes_list.append(user)
-                for element in current_post_description:
-                    if element.lower() in dict_user_interests.keys():
-                        dict_user_interests[element.lower()] += 1
-                    else:
-                        dict_user_interests[element.lower()] = 1
+            # Like
+            else:
+                Like.objects.create(post=current_post, memer=self.request.user)
                 order = "unlike"
+
+            update_post = Post.objects.filter(pk=post_pk)
+            current_likes_amount = len(Like.objects.filter(post=current_post))
+            update_post.update(likes_amount=current_likes_amount)
 
             updated_user_interests = ""
             for key in dict_user_interests.keys():
@@ -55,65 +54,35 @@ class HomePageView(TemplateView):
 
             user_model.update(interests=updated_user_interests)
 
-            current_likes_string = ""
-            current_likes_string += current_likes_list[0]
-            for i in range(1, len(current_likes_list)):
-                current_likes_string += ","
-                current_likes_string += current_likes_list[i]
-            current_likes_amount = len(current_likes_list)
-            Post.objects.filter(pk=int(post_pk)).update(likes=current_likes_string)
-            Post.objects.filter(pk=int(post_pk)).update(likes_amount=current_likes_amount-1)
-
             return JsonResponse({
                 "order": order,
-                "likes_amount":  current_likes_amount - 1 # -1 Accounts for empty string at index 0.
+                "likes_amount":  current_likes_amount
             }, status=200)
 
 
         # Follow/Unfollow Post-User on request.
         elif request.POST.get("task") == "follow":
-            post_user = current_post.memer.slug
+            post_user = current_post.memer
+            current_user = self.request.user
             post_user_model = User.objects.filter(slug=current_post.memer.slug)
             current_user_model = User.objects.filter(slug=self.request.user.slug)
 
-            # Accounts for possible initial empty string.
-            if len(current_post.memer.followers) != 0:
-                followers = current_post.memer.followers.split(",")
-            else:
-                followers = []
-
-            # Accounts for possible initial empty string.
-            if len(self.request.user.following) != 0:
-                following = self.request.user.following.split(",")
-            else:
-                following = []
-
-            string_following = ""
-            string_followers = ""
-
             # Unfollow
-            if user in followers:
-                followers.remove(user)
-                following.remove(post_user)
+            if Follow.objects.filter(follower=current_user, following=post_user):
+                followship = Follow.objects.get(follower=current_user, following=post_user)
+                followship.delete()
                 order = "follow"
 
             # Follow
             else:
-                followers.append(user)
-                following.append(post_user)
+                Follow.objects.create(follower=current_user, following=post_user)
                 order = "unfollow"
 
-            string_followers = ",".join(followers)
-            string_following = ",".join(following)
-            
-            num_followers = len(followers)
-            num_following = len(following)
+            post_user_followers = len(Follow.objects.filter(following=post_user))
+            current_user_following =  len(Follow.objects.filter(follower=current_user))
 
-            post_user_model.update(followers=string_followers)
-            post_user_model.update(followers_amount=num_followers)
-
-            current_user_model.update(following=string_following)
-            current_user_model.update(following_amount=num_following)
+            post_user_model.update(followers_amount=post_user_followers)
+            current_user_model.update(following_amount=current_user_following)
 
             return JsonResponse({
                 "order": order,
@@ -123,13 +92,13 @@ class HomePageView(TemplateView):
         # Save/Unsave post on command.
         elif request.POST.get("task") == "save":
             # Unsave
-            if Saved.objects.filter(post=current_post, memer=self.request.user):
-                unsaved_post = Saved.objects.get(post=current_post, memer=self.request.user)
+            if Save.objects.filter(post=current_post, memer=self.request.user):
+                unsaved_post = Save.objects.get(post=current_post, memer=self.request.user)
                 unsaved_post.delete()
                 order = "save"
             # Save
             else:
-                Saved.objects.create(post=current_post, memer=self.request.user)
+                Save.objects.create(post=current_post, memer=self.request.user)
                 order = "unsave"
 
             return JsonResponse({
@@ -208,10 +177,22 @@ class HomePageView(TemplateView):
 
         context["comments_by_post"] = comments_by_post
 
+        # Makes list of all the accounts the current user follows.
+        following_queryset = Follow.objects.filter(follower=self.request.user)
+        context["following"] = []
+        for following in following_queryset:
+            context["following"].append(following.following)
+
+        # Makes a list of all the liked posts of user.
+        likes_queryset = Like.objects.filter(memer=self.request.user)
+        context["likes"] = []
+        for like in likes_queryset:
+            context["likes"].append(like.post)
+
         # Makes a list of all the saved posts of the current user.
-        saved_posts_raw = Saved.objects.filter(memer=self.request.user)
+        saves_queryset = Save.objects.filter(memer=self.request.user)
         context["saved_posts"] = []
-        for post in saved_posts_raw:
-            context["saved_posts"].append(post.post)
+        for save in saves_queryset:
+            context["saved_posts"].append(save.post)
             
         return context

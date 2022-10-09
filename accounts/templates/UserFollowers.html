@@ -6,14 +6,14 @@
 {% else %}
 <h1>Followers</h1>
 
-{% for memer in followers %}
-<a href="{% url 'accounts:profile' memer.slug %}">{{ memer.username }}</a>
-{% if memer.slug in following %}
-<span>Unfollow</span>
-{% else %}
-<span>Follow</span>
-{% endif %}
-<br>
+{% for follow in followers %}
+    <a href="{% url 'accounts:profile' follow.follower.slug %}">{{ follow.follower.username }}</a>
+    {% if follow.follower in following %}
+        <span>Unfollow</span>
+    {% else %}
+        <span>Follow</span>
+    {% endif %}
+    <br>
 {% endfor %}
 {% endif %}
 {% endblock %}

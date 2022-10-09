@@ -35,16 +35,22 @@
 }
 
 .likes {
+    text-align: center;
     flex: 1;
 }
 
 .comments {
-    margin-left: 50%;
+    text-align: center;
     flex: 1;
 }
 
 .follow {
     text-align: right;
+    flex: 1;
+}
+
+.save-post {
+    text-align: center;
     flex: 1;
 }
 

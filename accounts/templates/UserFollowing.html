@@ -6,10 +6,10 @@
 {% else %}
 <h1>Following</h1>
 
-{% for memer in following %}
-<a href="{% url 'accounts:profile' memer.slug %}">{{ memer.username }}</a>  <span class="unfollow">Unfollow</span>
-<br>
-<br>
+{% for follow in following %}
+    <a href="{% url 'accounts:profile' follow.following.slug %}">{{ follow.following.username }}</a>  <span class="unfollow">Unfollow</span>
+    <br>
+    <br>
 {% endfor %}
 {% endif %}
 {% endblock %}

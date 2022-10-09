@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Follow
 from posts.models import Post
 from . import forms
 
@@ -28,9 +28,7 @@ class ProfileView(TemplateView):
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet
         context['user_profile'] = User.objects.get(slug=self.kwargs['slug'])
-        context['followers'] = context['user_profile'].followers.split(",")[1:] # [1:] Accounts for initial empty string
         context['followers_amount'] = context['user_profile'].followers_amount
-        context['following'] = context['user_profile'].following.split(",")[1:]
         context['following_amount'] = context['user_profile'].following_amount
         context['user_current'] = self.request.user
         context['posts'] = Post.objects.filter(memer=context['user_profile'].id)
@@ -82,13 +80,10 @@ class UserFollowing(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        following_slugs = self.request.user.following.split(",")
+
         context["current_user"] = self.request.user
         context["profile_user"] = User.objects.get(slug=kwargs["slug"])
-        context["following"] = []
-
-        for slug in following_slugs:
-            context["following"].append(User.objects.get(slug=slug))
+        context["following"] = Follow.objects.filter(follower=self.request.user)
 
         return context
 
@@ -97,18 +92,15 @@ class UserFollowers(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        followers_slugs = self.request.user.followers.split(",")
+
         context["current_user"] = self.request.user
         context["profile_user"] = User.objects.get(slug=kwargs["slug"])
-        context["followers"] = []
 
-        for slug in followers_slugs:
-            context["followers"].append(User.objects.get(slug=slug))
-
-        following_slugs = self.request.user.following.split(",")
+        following_queryset = Follow.objects.filter(follower=self.request.user)
         context["following"] = []
+        for follow in following_queryset:
+            context["following"].append(follow.following)
 
-        for slug in following_slugs:
-            context["following"].append(slug)
+        context["followers"] = Follow.objects.filter(following=self.request.user)
 
         return context
