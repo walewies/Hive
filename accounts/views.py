@@ -121,6 +121,9 @@ class UserFollowers(TemplateView):
 
     def post(self, request, slug):
         follow_user = User.objects.get(slug=request.POST.get("follow_user"))
+        current_user = self.request.user
+        follow_user_model = User.objects.filter(slug=follow_user.slug)
+        current_user_model = User.objects.filter(slug=current_user.slug)
 
         # Follow/Unfollow
         if request.POST.get("task") == "follow":
@@ -134,6 +137,12 @@ class UserFollowers(TemplateView):
             else:
                 Follow.objects.create(following=follow_user, follower=self.request.user)
                 order = "unfollow"
+
+            follow_user_followers = len(Follow.objects.filter(following=follow_user))
+            current_user_following =  len(Follow.objects.filter(follower=current_user))
+
+            follow_user_model.update(followers_amount=follow_user_followers)
+            current_user_model.update(following_amount=current_user_following)
 
             return JsonResponse({
                 "order": order,

@@ -18,22 +18,49 @@ class Post(models.Model):
     def __str__(self):
         return "Post " + str(self.pk) + " by " + self.memer.username
 
-class Like(models.Model):
-    memer = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return "Like " + str(self.pk) + " by " + self.memer.username + " on post " + str(self.post.pk)
-
 class Comment(models.Model):
     memer = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     body = models.TextField(max_length=256)
 
+    likes_amount = models.IntegerField(default=0)
+
     def __str__(self):
         return "Comment " + str(self.pk) + " by " + self.memer.username + " on post " + str(self.post.pk)
 
+class Subcomment(models.Model):
+    memer = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+    body = models.TextField(max_length=256)
+
+    likes_amount = models.IntegerField(default=0)
+
+    def __str__(self):
+        return "Comment " + str(self.pk) + " by " + self.memer.username + " on comment " + str(self.comment.pk)
+
+class PostLike(models.Model):
+    memer = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Like " + str(self.pk) + " by " + self.memer.username + " on post " + str(self.post.pk)
+
+class CommentLike(models.Model):
+    memer = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Like " + str(self.pk) + " by " + self.memer.username + " on comment " + str(self.comment.pk)
+
+class SubcommentLike(models.Model):
+    memer = models.ForeignKey(User, on_delete=models.CASCADE)
+    subcomment = models.ForeignKey(Subcomment, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Like " + str(self.pk) + " by " + self.memer.username + " on subcomment " + str(self.subcomment.pk)
+        
 class Save(models.Model):
     memer = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

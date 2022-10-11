@@ -11,7 +11,7 @@
     <div class="post-header">
         <h4>@{{ post_user.username }}</h3>
         {% if user.is_authenticated %}
-            {% if user.slug in followers %}
+            {% if post_user in following %}
             <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Unfollow</p>
             {% else %}
             <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Follow</p>
@@ -21,10 +21,10 @@
     <embed src="{{ post.meme_file.url }}" width="100%" height="auto">
     <div class="post-footer">
         {% if user.is_authenticated %}
-            {% if user.slug in likes %}
+            {% if post in likes %}
             <h3 class="like" post_pk="{{ post.pk }}">Unlike</h3>
             {% else %}
-            <h3 class="like" post_pk="{{ post.pk }}" >Like</h3>
+            <h3 class="like" post_pk="{{ post.pk }}">Like</h3>
             {% endif %}
         {% endif %}
         <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
@@ -46,11 +46,19 @@
     {% if not comments %}
         <h5>Looks like there are no comments yet.</h5>
     {% else %}
-        <ul id="comments_list" >
+        <ul id="comments-list" >
         {% for comment in comments %}
         <li>
             <a href="{% url 'accounts:profile' comment.memer.slug %}"><h5>{{ comment.memer }}</h5></a>
             <p>{{ comment.body }}</p>
+            {% if user.is_authenticated %}
+                {% for key, value in likes_by_comment.items %}
+                    {% if key == comment %}
+                    <h3 class="comment-like" comment_pk="{{ comment.pk }}">{{ value }}</h3>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <h3 class="likes_amount_comment{{ comment.pk }}">Likes: {{ comment.likes_amount }}</h3>
             <br>
         </li>
         {% endfor %}
@@ -82,5 +90,6 @@
     });
 </script>
 <script src="{% static 'js/home.js' %}"></script>
+<script src="{% static 'js/PostView.js' %}"></script>
 {% endif %}
 {% endblock %}

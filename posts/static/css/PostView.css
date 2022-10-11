@@ -55,3 +55,7 @@ ul {
 .add-comment {
     width: 100%;
 }
+
+.comment-like:hover {
+    cursor: pointer;
+}

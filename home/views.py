@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from posts.models import Post, Comment, Save, Like
+from posts.models import Post, Comment, Save, PostLike
 from accounts.models import User, Follow
 
 from django.http import JsonResponse
@@ -34,17 +34,17 @@ class HomePageView(TemplateView):
             order = ""
 
             # Unlike
-            if Like.objects.filter(post=current_post, memer=self.request.user):
-                liked_post = Like.objects.get(post=current_post, memer=self.request.user)
+            if PostLike.objects.filter(post=current_post, memer=self.request.user):
+                liked_post = PostLike.objects.get(post=current_post, memer=self.request.user)
                 liked_post.delete()
                 order = "like"
             # Like
             else:
-                Like.objects.create(post=current_post, memer=self.request.user)
+                PostLike.objects.create(post=current_post, memer=self.request.user)
                 order = "unlike"
 
             update_post = Post.objects.filter(pk=post_pk)
-            current_likes_amount = len(Like.objects.filter(post=current_post))
+            current_likes_amount = len(PostLike.objects.filter(post=current_post))
             update_post.update(likes_amount=current_likes_amount)
 
             updated_user_interests = ""
@@ -184,7 +184,7 @@ class HomePageView(TemplateView):
             context["following"].append(following.following)
 
         # Makes a list of all the liked posts of user.
-        likes_queryset = Like.objects.filter(memer=self.request.user)
+        likes_queryset = PostLike.objects.filter(memer=self.request.user)
         context["likes"] = []
         for like in likes_queryset:
             context["likes"].append(like.post)
