@@ -31,7 +31,7 @@ class ProfileView(TemplateView):
         context['followers_amount'] = context['user_profile'].followers_amount
         context['following_amount'] = context['user_profile'].following_amount
         context['user_current'] = self.request.user
-        context['posts'] = Post.objects.filter(memer=context['user_profile'].id)
+        context['posts'] = Post.objects.filter(user=context['user_profile'].id)
         context['posts_amount'] = len(context['posts'])
         return context
 

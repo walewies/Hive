@@ -1,5 +1,5 @@
 :root {
-    --navbar-bg-color: #7900FF;
+    --navbar-bg-color: #6b4701;
     --navbar-height: 64px;
 }
 
@@ -20,7 +20,7 @@ a {
 }
 
 /* body {
-    background-image: url("images/background.svg");
+    background-color: aqua;
 } */
 
 .navbar {
@@ -61,7 +61,7 @@ a {
 .nav-div:hover {
     cursor: pointer;
     border-radius: 10px;
-    background-color: #548CFF;
+    background-color: #985b10;
 }
 
 .nav-btn {
@@ -75,7 +75,7 @@ a {
 
 .button {
     border: none;
-    background-color: #548CFF;
+    background-color: #985b10;
     color: #93FFD8;
     font-family: "Comic Neue Bold";
     font-size: 1.2rem;

@@ -8,21 +8,22 @@
 
 #home {
     border-radius: 10px;
-    background-color: #548CFF;
+    background-color: #985b10;
 }
 
 .post {
     /* padding-left: 5%;
     padding-right: 5%; */
-    padding-bottom: 2%;
-    background-color: lightgray;
-    border-radius: 5%;
-    margin: 5% 5% 5% 5%;
+    /* padding-bottom: 2%; */
+    background-color: whitesmoke;
+    /* border-radius: 5%; */
+    /* margin: 5% 5% 5% 5%; */
 }
 
 .post-header {
     /* border-radius: 50%; */
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    border-top: 5px solid #985b10;
     margin-bottom: 10px;
     /* background-color: lightpink; */
     padding: 2% 5% 0% 5%;

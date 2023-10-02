@@ -15,7 +15,7 @@
     <div class="user-info">
         <h1>{{ user_profile.username }}</h1>
         <br>
-        <p>Posts: {{ posts_amount }}</p>
+        <p>Buzzes: {{ posts_amount }}</p>
         {% if user_current == user_profile %}
         <a href="{% url 'accounts:following' user_profile.slug %}"><p>Following: {{ following_amount }}</p></a>
         <a href="{% url 'accounts:followers' user_profile.slug %}"><p>Followers: {{ followers_amount }}</p></a>
@@ -25,9 +25,9 @@
     </div>
 </div>
 <br>
-<h1>Posts</h1>
+<h1>Buzzes</h1>
 {% if not posts %}
-    <h2>Looks like there are no posts yet.</h2>
+    <h2>Looks like there are no buzzes yet.</h2>
 {% else %}
     {% for post in posts %}
         <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="25%" height="auto"></a>

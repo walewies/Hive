@@ -34,13 +34,13 @@ class HomePageView(TemplateView):
             order = ""
 
             # Unlike
-            if PostLike.objects.filter(post=current_post, memer=self.request.user):
-                liked_post = PostLike.objects.get(post=current_post, memer=self.request.user)
+            if PostLike.objects.filter(post=current_post, user=self.request.user):
+                liked_post = PostLike.objects.get(post=current_post, user=self.request.user)
                 liked_post.delete()
                 order = "like"
             # Like
             else:
-                PostLike.objects.create(post=current_post, memer=self.request.user)
+                PostLike.objects.create(post=current_post, user=self.request.user)
                 order = "unlike"
 
             update_post = Post.objects.filter(pk=post_pk)
@@ -62,9 +62,9 @@ class HomePageView(TemplateView):
 
         # Follow/Unfollow Post-User on request.
         elif request.POST.get("task") == "follow":
-            post_user = current_post.memer
+            post_user = current_post.user
             current_user = self.request.user
-            post_user_model = User.objects.filter(slug=current_post.memer.slug)
+            post_user_model = User.objects.filter(slug=current_post.user.slug)
             current_user_model = User.objects.filter(slug=self.request.user.slug)
 
             # Unfollow
@@ -86,19 +86,19 @@ class HomePageView(TemplateView):
 
             return JsonResponse({
                 "order": order,
-                "post_user": current_post.memer.slug # To change all posts regarding following.
+                "post_user": current_post.user.slug # To change all posts regarding following.
             }, status=200)
         
         # Save/Unsave post on command.
         elif request.POST.get("task") == "save":
             # Unsave
-            if Save.objects.filter(post=current_post, memer=self.request.user):
-                unsaved_post = Save.objects.get(post=current_post, memer=self.request.user)
+            if Save.objects.filter(post=current_post, user=self.request.user):
+                unsaved_post = Save.objects.get(post=current_post, user=self.request.user)
                 unsaved_post.delete()
                 order = "save"
             # Save
             else:
-                Save.objects.create(post=current_post, memer=self.request.user)
+                Save.objects.create(post=current_post, user=self.request.user)
                 order = "unsave"
 
             return JsonResponse({
@@ -184,13 +184,13 @@ class HomePageView(TemplateView):
             context["following"].append(following.following)
 
         # Makes a list of all the liked posts of user.
-        likes_queryset = PostLike.objects.filter(memer=self.request.user)
+        likes_queryset = PostLike.objects.filter(user=self.request.user)
         context["likes"] = []
         for like in likes_queryset:
             context["likes"].append(like.post)
 
         # Makes a list of all the saved posts of the current user.
-        saves_queryset = Save.objects.filter(memer=self.request.user)
+        saves_queryset = Save.objects.filter(user=self.request.user)
         context["saved_posts"] = []
         for save in saves_queryset:
             context["saved_posts"].append(save.post)

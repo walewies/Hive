@@ -22,7 +22,7 @@ class CreatePost(CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        obj.memer = self.request.user
+        obj.user = self.request.user
         obj.datetime_posted = datetime.now()
         obj.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -51,13 +51,13 @@ class PostAndCommentsView(TemplateView):
             order = ""
 
             # Unlike
-            if PostLike.objects.filter(post=current_post, memer=self.request.user):
-                liked_post = PostLike.objects.get(post=current_post, memer=self.request.user)
+            if PostLike.objects.filter(post=current_post, user=self.request.user):
+                liked_post = PostLike.objects.get(post=current_post, user=self.request.user)
                 liked_post.delete()
                 order = "like"
             # Like
             else:
-                PostLike.objects.create(post=current_post, memer=self.request.user)
+                PostLike.objects.create(post=current_post, user=self.request.user)
                 order = "unlike"
 
             update_post = Post.objects.filter(pk=post_pk)
@@ -83,13 +83,13 @@ class PostAndCommentsView(TemplateView):
             current_user = self.request.user
 
             # Unlike
-            if CommentLike.objects.filter(comment=comment, memer=current_user):
-                commentlike_obj = CommentLike.objects.get(comment=comment, memer=current_user)
+            if CommentLike.objects.filter(comment=comment, user=current_user):
+                commentlike_obj = CommentLike.objects.get(comment=comment, user=current_user)
                 commentlike_obj.delete()
                 order = "like"
             # Like
             else:
-                CommentLike.objects.create(comment=comment, memer=current_user)
+                CommentLike.objects.create(comment=comment, user=current_user)
                 order = "unlike"
 
             current_likes_amount = len(CommentLike.objects.filter(comment=comment))
@@ -103,9 +103,9 @@ class PostAndCommentsView(TemplateView):
 
         # Follow/Unfollow Post-User on request.
         elif request.POST.get("task") == "follow":
-            post_user = current_post.memer
+            post_user = current_post.user
             current_user = self.request.user
-            post_user_model = User.objects.filter(slug=current_post.memer.slug)
+            post_user_model = User.objects.filter(slug=current_post.user.slug)
             current_user_model = User.objects.filter(slug=self.request.user.slug)
 
             # Unfollow
@@ -127,22 +127,22 @@ class PostAndCommentsView(TemplateView):
 
             return JsonResponse({
                 "order": order,
-                "post_user": current_post.memer.slug # To change all posts regarding following.
+                "post_user": current_post.user.slug # To change all posts regarding following.
             }, status=200)
 
         else:
             comment_body = request.POST.get('comment_body')
-            comment = Comment.objects.create(memer=self.request.user, body=comment_body, post=Post.objects.get(id=pk))
+            comment = Comment.objects.create(user=self.request.user, body=comment_body, post=Post.objects.get(id=pk))
 
             return JsonResponse({
                 "comment_body": comment.body, 
-                "comment_memer": comment.memer.username,
-                "comment_memer_slug": comment.memer.slug
+                "comment_user": comment.user.username,
+                "comment_user_slug": comment.user.slug
             }, status=200)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["post_user"] = Post.objects.get(id=self.kwargs['pk']).memer
+        context["post_user"] = Post.objects.get(id=self.kwargs['pk']).user
         context["current_user"] = self.request.user
         context["post"] = Post.objects.get(id=self.kwargs['pk'])
         context["comments"] = Comment.objects.filter(post=self.kwargs['pk'])
@@ -154,13 +154,13 @@ class PostAndCommentsView(TemplateView):
             context["following"].append(following.following)
             
         # Makes a list of all the liked posts of user.
-        likes_queryset = PostLike.objects.filter(memer=self.request.user)
+        likes_queryset = PostLike.objects.filter(user=self.request.user)
         context["likes"] = []
         for like in likes_queryset:
             context["likes"].append(like.post)
 
         # Makes a list of all the saved posts of the current user.
-        saves_queryset = Save.objects.filter(memer=self.request.user)
+        saves_queryset = Save.objects.filter(user=self.request.user)
         context["saved_posts"] = []
         for save in saves_queryset:
             context["saved_posts"].append(save.post)
@@ -171,7 +171,7 @@ class PostAndCommentsView(TemplateView):
         for comment in context["comments"]:
             comment_likes = CommentLike.objects.filter(comment=comment)
             for comment_like in comment_likes:
-                if self.request.user == comment_like.memer:
+                if self.request.user == comment_like.user:
                     order = "Unlike"
             likes_by_comment[comment] = order
             order = "Like"

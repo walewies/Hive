@@ -21,13 +21,13 @@
     {% for post in leaderboard %}
         <li>
             <div class="post">
-                <a href="{% url 'accounts:profile' post.memer.slug %}"><h3>{{ post.memer }}</h3></a>
+                <a href="{% url 'accounts:profile' post.user.slug %}"><h3>{{ post.user }}</h3></a>
                 {% if user.is_authenticated %}
-                    {% with post.memer.followers|split:"," as followers %}
+                    {% with post.user.followers|split:"," as followers %}
                         {% if user.slug in followers %}
-                        <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Unfollow</p>
+                        <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Unfollow</p>
                         {% else %}
-                        <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.memer.slug }}">Follow</p>
+                        <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Follow</p>
                         {% endif %}
                     {% endwith %} 
                 {% endif %}

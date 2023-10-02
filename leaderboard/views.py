@@ -45,8 +45,8 @@ class BaseLeaderboard(TemplateView):
 
         # Follow/Unfollow Post-User on request.
         else:
-            post_user_model = User.objects.filter(slug=current_post.memer.slug)
-            followers = current_post.memer.followers.split(",")
+            post_user_model = User.objects.filter(slug=current_post.user.slug)
+            followers = current_post.user.followers.split(",")
             string_followers = ""
 
             # Unfollow
@@ -69,7 +69,7 @@ class BaseLeaderboard(TemplateView):
 
             return JsonResponse({
                 "order": order,
-                "post_user": current_post.memer.slug
+                "post_user": current_post.user.slug
             }, status=200)
 
     def get_context_data(self, **kwargs):
