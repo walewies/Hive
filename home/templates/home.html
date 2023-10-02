@@ -3,6 +3,7 @@
 {% block head_block %}
 {% load static %}
 <title>HomePage</title>
+<link rel="stylesheet" href="{% static 'css/post_list_base.css' %}">
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
@@ -34,6 +35,16 @@
                         {% endif %}
                     {% endif %}
                     <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
+                </div>
+                <div class="dislikes">
+                    {% if user.is_authenticated %}
+                        {% if post in dislikes %}
+                            <h3 class="dislike" post_pk="{{ post.pk }}">Undislike</h3>
+                        {% else %}
+                            <h3 class="dislike" post_pk="{{ post.pk }}" >Dislike</h3>
+                        {% endif %}
+                    {% endif %}
+                    <h3 class="dislikes_amount_post{{ post.pk }}">Dislikes: {{ post.dislikes_amount }}</h3>
                 </div>
                 <div class="comments">
                     <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>

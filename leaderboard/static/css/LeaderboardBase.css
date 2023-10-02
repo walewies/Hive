@@ -21,16 +21,11 @@
     height: 100%;
 }
 
-
 .leaderboard-nav-div:hover {
     border-radius: 10px;
     background-color: #985b10;
 }
 
 .leaderboard-nav-div:hover {
-    cursor: pointer;
-}
-
-.like:hover {
     cursor: pointer;
 }

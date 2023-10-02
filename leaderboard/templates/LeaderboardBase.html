@@ -3,6 +3,7 @@
 {% block head_block %}
 {% load static %}
 {% load filter_tags %}
+<link rel="stylesheet" href="{% static 'css/post_list_base.css' %}">
 <link rel="stylesheet" href="{% static 'css/LeaderboardBase.css' %}">
     {% block head_content %}
     {% endblock %}
@@ -19,34 +20,62 @@
 {% csrf_token %}
 <ol>
     {% for post in leaderboard %}
-        <li>
-            <div class="post">
+        <div class="post">
+            <div class="post-header">
+                <!-- <div class="profile-pic"><img src="{{ post.user.profile_pic.url }}" alt="Profile Pic"></div> -->
                 <a href="{% url 'accounts:profile' post.user.slug %}"><h3>{{ post.user }}</h3></a>
                 {% if user.is_authenticated %}
-                    {% with post.user.followers|split:"," as followers %}
-                        {% if user.slug in followers %}
+                    {% if post.user in following %}
                         <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Unfollow</p>
-                        {% else %}
+                    {% else %}
                         <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Follow</p>
-                        {% endif %}
-                    {% endwith %} 
+                    {% endif %}
                 {% endif %}
-                <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="25%" height="auto"></a>
-                <br>
-                {% if user.is_authenticated %}
-                    {% with post.likes|split:"," as likes %}
-                        {% if user.slug in likes %}
-                        <h3 class="like" post_pk="{{ post.pk }}">Unlike</h3>
-                        {% else %}
-                        <h3 class="like" post_pk="{{ post.pk }}" >Like</h3>
-                        {% endif %}
-                    {% endwith %}
-                {% endif %}
-                <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
-                <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
-                <br>
             </div>
-        </li>
+            
+            <div><a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="100%" height="auto"></a></div>
+            <br>
+            <div class="post-footer">
+                <div class="likes">
+                    {% if user.is_authenticated %}
+                        {% if post in likes %}
+                            <h3 class="like" post_pk="{{ post.pk }}">Unlike</h3>
+                        {% else %}
+                            <h3 class="like" post_pk="{{ post.pk }}" >Like</h3>
+                        {% endif %}
+                    {% endif %}
+                    <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
+                </div>
+                <div class="dislikes">
+                    {% if user.is_authenticated %}
+                        {% if post in dislikes %}
+                            <h3 class="dislike" post_pk="{{ post.pk }}">Undislike</h3>
+                        {% else %}
+                            <h3 class="dislike" post_pk="{{ post.pk }}" >Dislike</h3>
+                        {% endif %}
+                    {% endif %}
+                    <h3 class="dislikes_amount_post{{ post.pk }}">Dislikes: {{ post.dislikes_amount }}</h3>
+                </div>
+                <div class="comments">
+                    <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+                    {% for key, value in comments_by_post.items %}
+                        {% if key == post %}
+                        <h3>Comments: {{ value }}</h3>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if user.is_authenticated %}
+                    <div class="save-post">
+                        {% if post in saved_posts %}
+                            <h3 class="save" post_pk="{{ post.pk }}">Unsave</h3>
+                        {% else %}
+                            <h3 class="save" post_pk="{{ post.pk }}">Save</h3>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            <br>
+        </div>
     {% endfor %}
 </ol>
 <script>
@@ -68,5 +97,5 @@
 
     })
 </script>
-<script src="{% static 'js/LeaderboardBase.js' %}"></script>
+<script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

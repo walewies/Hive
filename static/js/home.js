@@ -34,10 +34,34 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.order === "like") {
                     $(that).text("Like")
-                    
                 } else {
                     $(that).text("Unlike")
+                    $(".dislike[post_pk|=" + $(that).attr("post_pk") + "]").text("Dislike")
                 }
+                $(".likes_amount_post" + $(that).attr("post_pk")).text("Likes: " + response.likes_amount)
+                $(".dislikes_amount_post" + $(that).attr("post_pk")).text("Dislikes: " + response.dislikes_amount)
+            }
+        })
+    })
+
+    $(".dislike").click(function() {
+        let that = this
+        $.ajax({
+            url: "",
+            method: "post",
+            data: {
+                task: "dislike",
+                post_pk: $(this).attr("post_pk"),
+                csrfmiddlewaretoken: csrf
+            },
+            success: function(response) {
+                if (response.order === "dislike") {
+                    $(that).text("Dislike")           
+                } else {
+                    $(that).text("Undislike")
+                    $(".like[post_pk|=" + $(that).attr("post_pk") + "]").text("Like")
+                }
+                $(".dislikes_amount_post" + $(that).attr("post_pk")).text("Dislikes: " + response.dislikes_amount)
                 $(".likes_amount_post" + $(that).attr("post_pk")).text("Likes: " + response.likes_amount)
             }
         })

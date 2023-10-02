@@ -19,10 +19,6 @@ a {
     text-decoration: none;
 }
 
-/* body {
-    background-color: aqua;
-} */
-
 .navbar {
     background-color: var(--navbar-bg-color);
     height: var(--navbar-height);
