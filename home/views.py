@@ -100,7 +100,7 @@ class HomePageView(TemplateView):
             update_post = Post.objects.filter(pk=post_pk)
             current_dislikes_amount = len(PostDislike.objects.filter(post=current_post))
             current_likes_amount = len(PostLike.objects.filter(post=current_post))
-            update_post.update(dislikes_amount=current_dislikes_amount)
+            update_post.update(dislikes_amount=current_dislikes_amount, likes_amount= current_likes_amount)
 
             updated_user_interests = ""
             for key in dict_user_interests.keys():
