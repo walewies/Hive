@@ -12,6 +12,8 @@ class Post(models.Model):
     likes_amount = models.IntegerField(default=0)
     dislikes_amount = models.IntegerField(default=0)
 
+    comments_amount = models.IntegerField(default=0)
+
     datetime_posted = models.DateTimeField(default=datetime(2022, 4, 14, 20, 8, 7, 127325, tzinfo=pytz.UTC))
 
     description = models.TextField(max_length=256)

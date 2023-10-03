@@ -224,14 +224,6 @@ class HomePageView(TemplateView):
 
             context["posts"] = random.sample(list(dict.fromkeys(working_posts)), len(list(dict.fromkeys(working_posts)))) # removes duplicate items and shuffles.
 
-
-        # Makes list of comments amounts by post.
-        comments_by_post = {}
-        for post in context["posts"]:
-            comments_by_post[post] = len(Comment.objects.filter(post=post))
-
-        context["comments_by_post"] = comments_by_post
-
         # Makes list of all the accounts the current user follows.
         following_queryset = Follow.objects.filter(follower=self.request.user)
         context["following"] = []

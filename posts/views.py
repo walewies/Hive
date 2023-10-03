@@ -186,15 +186,26 @@ class PostAndCommentsView(TemplateView):
                 "post_user": current_post.user.slug # To change all posts regarding following.
             }, status=200)
 
-        else:
+        # Creates a new comment
+        elif request.POST.get("task") == "add_comment":
             comment_body = request.POST.get('comment_body')
-            comment = Comment.objects.create(user=self.request.user, body=comment_body, post=Post.objects.get(id=pk))
+            post = Post.objects.get(id=pk)
+            comment = Comment.objects.create(user=self.request.user, body=comment_body, post=post)
+            
+            # Changes the amount of comments after a new one has been created
+            post.comments_amount = len(Comment.objects.filter(post=post))
+            post.save()
 
             return JsonResponse({
                 "comment_body": comment.body, 
                 "comment_user": comment.user.username,
-                "comment_user_slug": comment.user.slug
+                "comment_user_slug": comment.user.slug,
+                "comment_pk": comment.pk,
+                "comments_amount": post.comments_amount
             }, status=200)
+        
+        else:
+            print("Failed to do anything in post view")
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -202,6 +213,10 @@ class PostAndCommentsView(TemplateView):
         context["current_user"] = self.request.user
         context["post"] = Post.objects.get(id=self.kwargs['pk'])
         context["comments"] = Comment.objects.filter(post=self.kwargs['pk'])
+
+        # Avoids error when searching for followers, likes, etc. of unauthenticated user.
+        if not self.request.user.is_authenticated:
+            return context
 
         # Makes a list of all the Users current user follows.
         following_queryset = Follow.objects.filter(follower=self.request.user)

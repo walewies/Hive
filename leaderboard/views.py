@@ -181,12 +181,9 @@ class BaseLeaderboard(TemplateView):
                 leaderboard.append(working_posts[working_posts_keys[i]].pop())
         context["leaderboard"] = leaderboard
 
-        # Makes list of comments amounts by post.
-        comments_by_post = {}
-        for post in context["leaderboard"]:
-            comments_by_post[post] = len(Comment.objects.filter(post=post))
-
-        context["comments_by_post"] = comments_by_post
+        # Avoids error when searching for followers, likes, etc. of unauthenticated user.
+        if not self.request.user.is_authenticated:
+            return context
 
         # Makes list of all the accounts the current user follows.
         following_queryset = Follow.objects.filter(follower=self.request.user)

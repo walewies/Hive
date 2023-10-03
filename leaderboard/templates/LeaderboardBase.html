@@ -58,11 +58,7 @@
                 </div>
                 <div class="comments">
                     <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
-                    {% for key, value in comments_by_post.items %}
-                        {% if key == post %}
-                        <h3>Comments: {{ value }}</h3>
-                        {% endif %}
-                    {% endfor %}
+                    <h3>Comments: {{ post.comments_amount }}</h3>
                 </div>
                 {% if user.is_authenticated %}
                     <div class="save-post">

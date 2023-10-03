@@ -41,6 +41,10 @@
             {% endif %}
             <h3 class="dislikes_amount_post{{ post.pk }}">Dislikes: {{ post.dislikes_amount }}</h3>
         </div>
+        <div class="comments">
+            <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+            <h3 class="comments_amount">Comments: {{ post.comments_amount }}</h3>
+        </div>
         {% if user.is_authenticated %}
             <div class="save-post">
                 {% if post in saved_posts %}
@@ -59,7 +63,7 @@
     {% csrf_token %}
     <textarea name="comment_body" id="comment_body" cols="30" rows="10"></textarea>
     <br>
-    <button class="submit-comment-btn" type="submit">I hereby publish thee!!!</button>
+    <button class="submit-comment-btn">I hereby publish thee!!!</button>
 </div>
 {% endif %}
 
@@ -89,28 +93,6 @@
 </div>
 
 {% if current_user.is_authenticated %}
-<script>
-    $(document).ready(function() {
-
-    let csrf = $("input[name=csrfmiddlewaretoken]").val()
-
-    $(".submit-comment-btn").click(function() {
-        $.ajax({
-            url: "",
-            type: 'post',
-            data: {
-                comment_body: $("#comment_body").val(),
-                csrfmiddlewaretoken: csrf
-            },
-            success: function(response) {
-                $("#comments_list").append("<li><a href=\"{% url 'accounts:profile' current_user.slug %}\"><h5>@" + response.comment_user + "</h5></a><p>" + response.comment_body + "</p><br></li>")
-                $("#comment_body").val("")
-            }
-        })
-    })
-
-    });
-</script>
 <script src="{% static 'js/home.js' %}"></script>
 <script src="{% static 'js/PostView.js' %}"></script>
 {% endif %}
