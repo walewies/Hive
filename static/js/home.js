@@ -13,9 +13,9 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.order === "unfollow") {
-                    $(that).text("Unfollow")
+                    $(".follow[post_user|=" + $(that).attr("post_user") + "]").text("Unfollow")
                 } else {
-                    $(that).text("Follow")
+                    $(".follow[post_user|=" + $(that).attr("post_user") + "]").text("Follow")
                 }
             }
         })

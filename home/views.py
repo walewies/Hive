@@ -107,7 +107,6 @@ class HomePageView(TemplateView):
 
             return JsonResponse({
                 "order": order,
-                "post_user": current_post.user.slug # To change all posts regarding following.
             }, status=200)
         
         # Save/Unsave post on command.
