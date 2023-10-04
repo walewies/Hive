@@ -2,6 +2,10 @@
     padding: 0% 5% 5% 5%;
 }
 
+.comments-container {
+    margin: 0% 5% 5% 5%;
+}
+
 .add-comment {
     display: flex;
     flex-direction: column;

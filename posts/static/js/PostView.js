@@ -19,6 +19,7 @@ $(document).ready(function() {
 
                 $("#comments-list").prepend(default_comment_structure + default_like_structure)
                 $("#comment_body").val("")
+                $("#no_comments_statement").text("")
             }
         })
     })

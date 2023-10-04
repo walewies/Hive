@@ -19,8 +19,16 @@
             {% endif %}
         {% endif %}
     </div>
-    <embed src="{{ post.meme_file.url }}" width="100%" height="auto">
-    <div class="post-footer">
+
+    <div class="post-content">
+        <h3>{{ post.post_body }}</h3><br>
+        {% if post.post_file %}
+        <embed src="{{ post.post_file.url }}" width="100%" height="auto">
+        {% endif %}
+    </div>
+    <br>
+
+    <div class="post-footer" id="post-footer">
         <div class="likes">
             {% if user.is_authenticated %}
                 {% if post in likes %}
@@ -42,7 +50,7 @@
             <h3 class="dislikes_amount_post{{ post.pk }}">Dislikes: {{ post.dislikes_amount }}</h3>
         </div>
         <div class="comments">
-            <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+            <a href="#post-footer"><h3>Comment</h3></a>
             <h3 class="comments_amount">Comments: {{ post.comments_amount }}</h3>
         </div>
         {% if user.is_authenticated %}
@@ -67,27 +75,30 @@
 </div>
 {% endif %}
 
-<div class="comments">
+<br>
+
+<div class="comments-container">
     <h3>Comments:</h4>
     {% if not comments %}
-        <h5>Looks like there are no comments yet.</h5>
+        <ul id="comments-list"></ul>
+        <h5 id="no_comments_statement">Looks like there are no comments yet.</h5>
     {% else %}
-        <ul id="comments-list" >
-        {% for comment in comments %}
-        <li>
-            <a href="{% url 'accounts:profile' comment.user.slug %}"><h5>{{ comment.user }}</h5></a>
-            <p>{{ comment.body }}</p>
-            {% if user.is_authenticated %}
-                {% for key, value in likes_by_comment.items %}
-                    {% if key == comment %}
-                    <h3 class="comment-like" comment_pk="{{ comment.pk }}">{{ value }}</h3>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            <h3 class="likes_amount_comment{{ comment.pk }}">Likes: {{ comment.likes_amount }}</h3>
-            <br>
-        </li>
-        {% endfor %}
+        <ul id="comments-list">
+            {% for comment in comments %}
+            <li>
+                <a href="{% url 'accounts:profile' comment.user.slug %}"><h5>{{ comment.user }}</h5></a>
+                <p>{{ comment.body }}</p>
+                {% if user.is_authenticated %}
+                    {% for key, value in likes_by_comment.items %}
+                        {% if key == comment %}
+                        <h3 class="comment-like" comment_pk="{{ comment.pk }}">{{ value }}</h3>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <h3 class="likes_amount_comment{{ comment.pk }}">Likes: {{ comment.likes_amount }}</h3>
+                <br>
+            </li>
+            {% endfor %}
         </ul>
     {% endif %}
 </div>

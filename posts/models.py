@@ -7,7 +7,9 @@ import pytz
 # Create your models here.
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    meme_file = models.FileField(upload_to="posts/")
+
+    post_body = models.CharField(max_length=256, default="")
+    post_file = models.FileField(upload_to="posts/", blank=True)
 
     likes_amount = models.IntegerField(default=0)
     dislikes_amount = models.IntegerField(default=0)
@@ -15,8 +17,6 @@ class Post(models.Model):
     comments_amount = models.IntegerField(default=0)
 
     datetime_posted = models.DateTimeField(default=datetime(2022, 4, 14, 20, 8, 7, 127325, tzinfo=pytz.UTC))
-
-    description = models.TextField(max_length=256)
 
     def __str__(self):
         return "Post " + str(self.pk) + " by " + self.user.username

@@ -4,6 +4,7 @@
 {% load static %}
 <title>{{ user_profile.username }}'s Profile</title>
 <link rel="stylesheet" href="{% static 'css/UserProfile.css' %}">
+<link rel="stylesheet" href="{% static 'css/post_list_base.css' %}">
 {% endblock %}
 
 {% block body_block %}
@@ -29,8 +30,66 @@
 {% if not posts %}
     <h2>Looks like there are no buzzes yet.</h2>
 {% else %}
+{% csrf_token %}
     {% for post in posts %}
-        <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="25%" height="auto"></a>
+    <div class="post">
+        <div class="post-header">
+            <h4>@{{ post.user.username }}</h3>
+            {% if user.is_authenticated %}
+                {% if post_user in following %}
+                <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Unfollow</p>
+                {% else %}
+                <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Follow</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    
+        <div class="post-content">
+            <h3>{{ post.post_body }}</h3>
+            <br>
+            {% if post.post_file %}
+            <embed src="{{ post.post_file.url }}" width="100%" height="auto">
+            {% endif %}
+        </div>
+        <br>
+    
+        <div class="post-footer" id="post-footer">
+            <div class="likes">
+                {% if user.is_authenticated %}
+                    {% if post in likes %}
+                        <h3 class="like" post_pk="{{ post.pk }}">Unlike</h3>
+                    {% else %}
+                        <h3 class="like" post_pk="{{ post.pk }}" >Like</h3>
+                    {% endif %}
+                {% endif %}
+                <h3 class="likes_amount_post{{ post.pk }}">Likes: {{ post.likes_amount }}</h3>
+            </div>
+            <div class="dislikes">
+                {% if user.is_authenticated %}
+                    {% if post in dislikes %}
+                        <h3 class="dislike" post_pk="{{ post.pk }}">Undislike</h3>
+                    {% else %}
+                        <h3 class="dislike" post_pk="{{ post.pk }}" >Dislike</h3>
+                    {% endif %}
+                {% endif %}
+                <h3 class="dislikes_amount_post{{ post.pk }}">Dislikes: {{ post.dislikes_amount }}</h3>
+            </div>
+            <div class="comments">
+                <a href="{% url 'posts:view_post' post.pk %}"><h3>Comment</h3></a>
+                <h3 class="comments_amount">Comments: {{ post.comments_amount }}</h3>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="save-post">
+                    {% if post in saved_posts %}
+                        <h3 class="save" post_pk="{{ post.pk }}">Unsave</h3>
+                    {% else %}
+                        <h3 class="save" post_pk="{{ post.pk }}">Save</h3>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        <br>
+    </div>
     {% endfor %}
 {% endif %}
 <br>
@@ -43,4 +102,5 @@
         <a href=""><button class="button">Message</button></a>
     {% endif %}
 {% endif %}
+<script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

@@ -14,7 +14,7 @@ from posts.models import PostLike, CommentLike, SubcommentLike, Save, PostDislik
 # Create your views here.
 class CreatePost(CreateView):
     model = Post
-    fields = ('meme_file', 'description')
+    fields = ("post_body", "post_file")
     template_name = "CreatePost.html"
 
     def get_success_url(self):
@@ -38,16 +38,6 @@ class PostAndCommentsView(TemplateView):
         # Like/Unlike post on request.
         if request.POST.get("task") == "like":
             user_model = User.objects.filter(slug=user) # .get() does not allow .update() on object
-            list_user_interests = user_model[0].interests.split(",") # [0] because .filter() returns queryset
-            if list_user_interests[0] == "":
-                list_user_interests.pop(0) # removes initial empty string
-            dict_user_interests = {}
-
-            if len(list_user_interests) > 0:
-                for i in range(0, len(list_user_interests), 2):
-                    dict_user_interests[list_user_interests[i].lower()] = int(list_user_interests[i+1])
-
-            current_post_description = current_post.description.split(",")
             order = ""
 
             # Unlike
@@ -70,13 +60,6 @@ class PostAndCommentsView(TemplateView):
             current_dislikes_amount = len(PostDislike.objects.filter(post=current_post))
             update_post.update(likes_amount=current_likes_amount, dislikes_amount=current_dislikes_amount)
 
-            updated_user_interests = ""
-            for key in dict_user_interests.keys():
-                updated_user_interests += "," + key + "," + str(dict_user_interests[key])
-            updated_user_interests = updated_user_interests[1:]
-
-            user_model.update(interests=updated_user_interests)
-
             return JsonResponse({
                 "order": order,
                 "likes_amount":  current_likes_amount,
@@ -86,16 +69,6 @@ class PostAndCommentsView(TemplateView):
         # Dislike/Undislike post on request.
         if request.POST.get("task") == "dislike":
             user_model = User.objects.filter(slug=user) # .get() does not allow .update() on object
-            list_user_interests = user_model[0].interests.split(",") # [0] because .filter() returns queryset
-            if list_user_interests[0] == "":
-                list_user_interests.pop(0) # removes initial empty string
-            dict_user_interests = {}
-
-            if len(list_user_interests) > 0:
-                for i in range(0, len(list_user_interests), 2):
-                    dict_user_interests[list_user_interests[i].lower()] = int(list_user_interests[i+1])
-
-            current_post_description = current_post.description.split(",")
 
             order = ""
 
@@ -117,14 +90,7 @@ class PostAndCommentsView(TemplateView):
             update_post = Post.objects.filter(pk=post_pk)
             current_dislikes_amount = len(PostDislike.objects.filter(post=current_post))
             current_likes_amount = len(PostLike.objects.filter(post=current_post))
-            update_post.update(dislikes_amount=current_dislikes_amount, likes_amount=current_likes_amount)
-
-            updated_user_interests = ""
-            for key in dict_user_interests.keys():
-                updated_user_interests += "," + key + "," + str(dict_user_interests[key])
-            updated_user_interests = updated_user_interests[1:]
-
-            user_model.update(interests=updated_user_interests)
+            update_post.update(dislikes_amount=current_dislikes_amount, likes_amount= current_likes_amount)
 
             return JsonResponse({
                 "order": order,
@@ -155,7 +121,6 @@ class PostAndCommentsView(TemplateView):
                 "order": order,
                 "likes_amount": current_likes_amount
             }, status=200)
-
 
         # Follow/Unfollow Post-User on request.
         elif request.POST.get("task") == "follow":

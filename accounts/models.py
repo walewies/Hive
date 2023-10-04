@@ -9,8 +9,6 @@ class User(auth.models.AbstractUser):
     profile_pic = models.ImageField(upload_to="profiles/", default="profiles/default_profile.jpeg")
     slug = models.SlugField(max_length=256)
 
-    interests = models.TextField(blank=True)
-
     followers_amount = models.PositiveIntegerField(default=0)
     following_amount = models.PositiveIntegerField(default=0)
 

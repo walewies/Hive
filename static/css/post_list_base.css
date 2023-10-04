@@ -39,6 +39,11 @@
     flex: 1;
 }
 
+.dislikes {
+    text-align: center;
+    flex: 1;
+}
+
 .comments {
     text-align: center;
     flex: 1;
@@ -56,12 +61,6 @@
 
 .save:hover {
     cursor: pointer;
-}
-
-.profile-pic {
-    /* height: 10px; */
-    width: auto;
-    border-radius: 100%;
 }
 
 .end-message {

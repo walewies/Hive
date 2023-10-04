@@ -23,8 +23,15 @@
                 {% endif %}
             </div>
             
-            <div><a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.meme_file.url }}" width="100%" height="auto"></a></div>
+
+            <div class="post-content">
+                <a href="{% url 'posts:view_post' post.pk %}"><h3>{{ post.post_body }}</h3></a><br>
+                {% if post.post_file %}
+                <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.post_file.url }}" width="100%" height="auto"></a>
+                {% endif %}
+            </div>
             <br>
+
             <div class="post-footer">
                 <div class="likes">
                     {% if user.is_authenticated %}
