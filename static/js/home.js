@@ -1,4 +1,8 @@
 $(document).ready(function() {
+    $(".view-user-profile-link").click(function() {
+
+    })
+
     let csrf = $("input[name=csrfmiddlewaretoken]").val()
 
     $(".follow").click(function() {

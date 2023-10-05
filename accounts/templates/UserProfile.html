@@ -9,7 +9,6 @@
 
 {% block body_block %}
 <div class="profile-header">
-    <!-- <h1>Interests: {{ user_profile.interests }}</h1> -->
     <div class="image-cropper">
         <img class="profile-pic" src="{{ user_profile.profile_pic.url }}" alt="profile_pic">
     </div>
@@ -34,6 +33,9 @@
     {% for post in posts %}
     <div class="post">
         <div class="post-header">
+            <div class="post-profile-pic-container">
+                <img class="post-profile-pic" src="{{ post.user.profile_pic.url }}" alt="Profile Pic">
+            </div>
             <h4>@{{ post.user.username }}</h3>
             {% if user.is_authenticated %}
                 {% if post_user in following %}
