@@ -140,6 +140,16 @@ class ProfileView(TemplateView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
 
+        # User's personal data
+        context['user_profile'] = User.objects.get(slug=self.kwargs['slug'])
+        context['posts'] = Post.objects.filter(user=context['user_profile'].id)
+        context['posts_amount'] = len(context['posts'])
+        context['followers_amount'] = context['user_profile'].followers_amount
+        context['following_amount'] = context['user_profile'].following_amount
+
+        if not self.request.user.is_authenticated:
+            return context
+
         # Makes list of all the accounts the current user follows.
         following_queryset = Follow.objects.filter(follower=self.request.user)
         context["following"] = []
@@ -164,13 +174,7 @@ class ProfileView(TemplateView):
         for save in saves_queryset:
             context["saved_posts"].append(save.post)
 
-        # User's personal data
-        context['user_profile'] = User.objects.get(slug=self.kwargs['slug'])
-        context['followers_amount'] = context['user_profile'].followers_amount
-        context['following_amount'] = context['user_profile'].following_amount
         context['user_current'] = self.request.user
-        context['posts'] = Post.objects.filter(user=context['user_profile'].id)
-        context['posts_amount'] = len(context['posts'])
         return context
 
 class EditProfileView(UpdateView):
