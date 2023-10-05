@@ -12,10 +12,14 @@
     <div class="post-header">
         <h4>@{{ post_user.username }}</h3>
         {% if user.is_authenticated %}
-            {% if post_user in following %}
-            <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Unfollow</p>
+            {% if post.user in following %}
+            <div class="follow-container">
+                <span class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Unfollow</span>
+            </div>
             {% else %}
-            <p class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Follow</p>
+            <div class="follow-container">
+                <span class="follow" post_pk="{{ post.pk }}" post_user="{{ post.user.slug }}">Follow</span>
+            </div>
             {% endif %}
         {% endif %}
     </div>

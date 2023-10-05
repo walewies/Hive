@@ -65,8 +65,10 @@
     flex: 1;
 }
 
-.follow {
+.follow-container {
     text-align: right;
+    align-self: flex-start;
+    justify-self: flex-end;
     flex: 1;
 }
 
