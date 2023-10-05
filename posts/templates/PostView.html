@@ -10,6 +10,9 @@
 {% block body_block %}
 <div class="post">
     <div class="post-header">
+        <div class="post-profile-pic-container">
+            <img class="post-profile-pic" src="{{ post.user.profile_pic.url }}" alt="Profile Pic">
+        </div>
         <h4>@{{ post_user.username }}</h3>
         {% if user.is_authenticated %}
             {% if post.user in following %}
