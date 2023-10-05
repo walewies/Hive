@@ -15,11 +15,13 @@
     overflow: hidden;
     border-radius: 100%;
     border: 5px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile-pic {
     height: 100%;
-    width: auto;
 }
 
 .user-info {
