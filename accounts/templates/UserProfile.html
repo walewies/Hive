@@ -51,10 +51,10 @@
         </div>
     
         <div class="post-content">
-            <h3>{{ post.post_body }}</h3>
+            <a href="{% url 'posts:view_post' post.pk %}"><h3>{{ post.post_body }}</h3></a>
             <br>
             {% if post.post_file %}
-            <embed src="{{ post.post_file.url }}" width="100%" height="auto">
+            <a href="{% url 'posts:view_post' post.pk %}"><embed src="{{ post.post_file.url }}" width="100%" height="auto"></a>
             {% endif %}
         </div>
         <br>
